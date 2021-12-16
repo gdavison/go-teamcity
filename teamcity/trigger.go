@@ -32,7 +32,7 @@ func newTriggerService(buildTypeID string, c *http.Client, base *sling.Sling) *T
 		BuildTypeID: buildTypeID,
 		httpClient:  c,
 		base:        sling,
-		restHelper:  newRestHelperWithSling(c, sling),
+		restHelper:  newRestHelper(c, sling),
 	}
 }
 

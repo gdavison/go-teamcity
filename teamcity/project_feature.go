@@ -42,7 +42,7 @@ type ProjectFeatureService struct {
 func newProjectFeatureService(projectID string, c *http.Client, sling *sling.Sling) *ProjectFeatureService {
 	return &ProjectFeatureService{
 		ProjectID:  projectID,
-		restHelper: newRestHelperWithSling(c, sling),
+		restHelper: newRestHelper(c, sling),
 	}
 }
 

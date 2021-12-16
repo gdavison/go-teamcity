@@ -21,7 +21,7 @@ func NewBuildTemplateService(buildTypeID string, c *http.Client, base *sling.Sli
 	return &BuildTemplateService{
 		BuildTypeID: buildTypeID,
 		httpClient:  c,
-		restHelper:  newRestHelperWithSling(c, sling),
+		restHelper:  newRestHelper(c, sling),
 	}
 }
 

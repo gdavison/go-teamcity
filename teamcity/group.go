@@ -44,7 +44,7 @@ func newGroupService(base *sling.Sling, httpClient *http.Client) *GroupService {
 	return &GroupService{
 		httpClient: httpClient,
 		sling:      sling,
-		restHelper: newRestHelperWithSling(httpClient, sling),
+		restHelper: newRestHelper(httpClient, sling),
 	}
 }
 

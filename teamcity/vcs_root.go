@@ -93,7 +93,7 @@ func newVcsRootService(base *sling.Sling, httpClient *http.Client) *VcsRootServi
 	return &VcsRootService{
 		sling:      sling,
 		httpClient: httpClient,
-		restHelper: newRestHelperWithSling(httpClient, sling),
+		restHelper: newRestHelper(httpClient, sling),
 	}
 }
 

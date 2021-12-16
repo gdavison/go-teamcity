@@ -296,21 +296,3 @@ func getTestBuildTypeData(name string, description string, projectId string, tem
 	out.Description = description
 	return
 }
-
-func cleanUpBuildType(t *testing.T, c *teamcity.Client, id string) {
-	if err := c.BuildTypes.Delete(id); err != nil {
-		t.Errorf("Unable to delete build type with id = '%s', err: %s", id, err)
-		return
-	}
-
-	deleted, err := c.BuildTypes.GetByID(id)
-
-	if deleted != nil {
-		t.Errorf("Build type not deleted during cleanup.")
-		return
-	}
-
-	if err == nil {
-		t.Errorf("Expected 404 Not Found error when getting Deleted Build Type, but no error returned.")
-	}
-}

@@ -84,7 +84,7 @@ func newProjectService(base *sling.Sling, client *http.Client) *ProjectService {
 	return &ProjectService{
 		sling:      sling,
 		httpClient: client,
-		restHelper: newRestHelperWithSling(client, sling),
+		restHelper: newRestHelper(client, sling),
 	}
 }
 

@@ -53,7 +53,7 @@ func newAgentPoolsService(base *sling.Sling, client *http.Client) *AgentPoolsSer
 	return &AgentPoolsService{
 		sling:      sling,
 		httpClient: client,
-		restHelper: newRestHelperWithSling(client, sling),
+		restHelper: newRestHelper(client, sling),
 	}
 }
 

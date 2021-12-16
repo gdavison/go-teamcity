@@ -223,7 +223,7 @@ func newBuildTypeService(base *sling.Sling, httpClient *http.Client) *BuildTypeS
 	return &BuildTypeService{
 		httpClient: httpClient,
 		sling:      sling,
-		restHelper: newRestHelperWithSling(httpClient, sling),
+		restHelper: newRestHelper(httpClient, sling),
 	}
 }
 

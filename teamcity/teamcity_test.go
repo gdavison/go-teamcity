@@ -15,7 +15,6 @@ const (
 	testBuildTypeProjectId = "BuildTypeProjectTest"
 	testVcsRootProjectId   = "VcsRootProjectTest"
 	testBuildTypeId        = "BuildTypeTest"
-	testParameterProjectId = "ParameterProjectId"
 )
 
 func setup() *teamcity.Client {

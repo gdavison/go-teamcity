@@ -166,7 +166,7 @@ func newAgentRequirementService(buildTypeID string, client *http.Client, base *s
 		BuildTypeID:  buildTypeID,
 		httpClient:   client,
 		base:         sling,
-		restHelper:   newRestHelperWithSling(client, sling),
+		restHelper:   newRestHelper(client, sling),
 		buildLocator: buildLocator,
 	}
 }

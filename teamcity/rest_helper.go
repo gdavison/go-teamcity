@@ -20,11 +20,7 @@ type restHelper struct {
 	sling      *sling.Sling
 }
 
-func newRestHelper(httpClient *http.Client) *restHelper {
-	return newRestHelperWithSling(httpClient, nil)
-}
-
-func newRestHelperWithSling(httpClient *http.Client, s *sling.Sling) *restHelper {
+func newRestHelper(httpClient *http.Client, s *sling.Sling) *restHelper {
 	return &restHelper{
 		httpClient: httpClient,
 		sling:      s,
@@ -234,14 +230,6 @@ func replaceValue(i, v interface{}) {
 	}
 
 	val.Set(newVal)
-}
-
-func reverseMap(m map[string]string) map[string]string {
-	n := make(map[string]string)
-	for k, v := range m {
-		n[v] = k
-	}
-	return n
 }
 
 type textPlainBodyProvider struct {

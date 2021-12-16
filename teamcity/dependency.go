@@ -28,8 +28,8 @@ func NewDependencyService(buildTypeID string, c *http.Client, base *sling.Sling)
 		httpClient:     c,
 		artifactSling:  artifactSling,
 		snapshotSling:  snapshotSling,
-		artifactHelper: newRestHelperWithSling(c, artifactSling),
-		snapshotHelper: newRestHelperWithSling(c, snapshotSling),
+		artifactHelper: newRestHelper(c, artifactSling),
+		snapshotHelper: newRestHelper(c, snapshotSling),
 	}
 }
 
