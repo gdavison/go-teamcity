@@ -5,6 +5,7 @@ import (
 
 	"github.com/cvbarros/go-teamcity/teamcity"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestFeatureCommitPublisher_UnmarshallProperties_Github(t *testing.T) {
@@ -47,7 +48,8 @@ func TestFeatureCommitPublisher_UnmarshallProperties_Github(t *testing.T) {
 		}
 	}
 	`
-	actual.UnmarshalJSON([]byte(json))
+	err := actual.UnmarshalJSON([]byte(json))
+	require.NoError(t, err)
 
 	assert.Equal("BUILD_EXT_1", actual.ID())
 	assert.Equal("Project_VcsRootId", actual.VcsRootID())

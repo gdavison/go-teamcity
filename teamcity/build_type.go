@@ -165,7 +165,10 @@ func (b *BuildType) read(dt *buildTypeJSON) error {
 		if err != nil {
 			return err
 		}
-		stepReadingFunc(dt, &steps[i])
+		err = stepReadingFunc(dt, &steps[i])
+		if err != nil {
+			return err
+		}
 	}
 	b.Steps = steps
 
@@ -374,7 +377,10 @@ func (s *BuildTypeService) GetSteps(id string) ([]Step, error) {
 		if err != nil {
 			return nil, err
 		}
-		stepReadingFunc(dt, &steps[i])
+		err = stepReadingFunc(dt, &steps[i])
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return steps, nil

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/cvbarros/go-teamcity/teamcity"
+	"github.com/stretchr/testify/require"
 )
 
 type TestContext struct {
@@ -63,7 +64,8 @@ func (b *BuildTypeContext) SetupWithOpt(t *TestContext, opt BuildTypeContextOpti
 		created, _ := t.Client.VcsRoots.Create(b.Project.ID, gitVcs)
 		b.VcsRoot = created
 
-		t.Client.BuildTypes.AttachVcsRoot(b.BuildType.ID, created)
+		err := t.Client.BuildTypes.AttachVcsRoot(b.BuildType.ID, created)
+		require.NoError(t.T, err)
 	}
 }
 

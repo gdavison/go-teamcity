@@ -53,7 +53,8 @@ func TestFeatureGolang_UnmarshallProperties(t *testing.T) {
 		}
 	}
 	`
-	actual.UnmarshalJSON([]byte(json))
+	err := actual.UnmarshalJSON([]byte(json))
+	require.NoError(t, err)
 
 	assert.Equal("BUILD_EXT_1", actual.ID())
 }

@@ -176,8 +176,10 @@ func (suite *SuiteBuildTypeTrigger) TestScheduledWeeklyTrigger_Get() {
 
 func (suite *SuiteBuildTypeTrigger) AssertDeleted() {
 	ts := suite.TC.Client.TriggerService(suite.BuildTypeID)
-	ts.Delete(suite.Trigger.ID())
-	_, err := ts.GetByID(suite.Trigger.ID()) // refresh
+	err := ts.Delete(suite.Trigger.ID())
+	suite.Require().NoError(err)
+
+	_, err = ts.GetByID(suite.Trigger.ID()) // refresh
 
 	suite.Require().Error(err)
 	suite.Contains(err.Error(), "404")

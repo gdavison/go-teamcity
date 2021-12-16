@@ -60,8 +60,7 @@ func (r *restHelper) get(path string, out interface{}, resourceDescription strin
 	defer response.Body.Close()
 
 	if response.StatusCode == 200 {
-		json.NewDecoder(response.Body).Decode(out)
-		return nil
+		return json.NewDecoder(response.Body).Decode(out)
 	}
 
 	dt, err := ioutil.ReadAll(response.Body)

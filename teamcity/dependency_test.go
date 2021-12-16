@@ -67,9 +67,11 @@ func TestSnapshotDependency_Delete(t *testing.T) {
 	dep := teamcity.NewSnapshotDependency(buildTypeDep.ID)
 	created, err := sut.AddSnapshotDependency(dep)
 
-	require.Nil(t, err)
+	require.NoError(t, err)
 
-	sut.DeleteSnapshot(created.ID)
+	err = sut.DeleteSnapshot(created.ID)
+	require.NoError(t, err)
+
 	_, err = sut.GetSnapshotByID(created.ID) // refresh
 
 	require.Error(t, err)
@@ -133,9 +135,11 @@ func TestArtifactDependency_Delete(t *testing.T) {
 	dep, _ := teamcity.NewArtifactDependency(buildTypeDep.ID, createDefaultTestingArtifactDependencyOptions())
 	created, err := sut.AddArtifactDependency(dep)
 
-	require.Nil(t, err)
+	require.NoError(t, err)
 
-	sut.DeleteArtifact(created.ID())
+	err = sut.DeleteArtifact(created.ID())
+	require.NoError(t, err)
+
 	_, err = sut.GetArtifactByID(created.ID()) // refresh
 
 	require.Error(t, err)

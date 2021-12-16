@@ -89,7 +89,8 @@ func (suite *SuiteBuildTypeSteps) TestGet_All() {
 func (suite *SuiteBuildTypeSteps) TestDelete() {
 	step1 := suite.AddStep(suite.StepCmdLineScript)
 	sut := suite.TC.Client.BuildTypes
-	sut.DeleteStep(suite.BuildTypeID, step1.GetID())
+	err := sut.DeleteStep(suite.BuildTypeID, step1.GetID())
+	suite.Require().NoError(err)
 
 	actual := suite.GetSteps(suite.BuildTypeID)
 	suite.Empty(actual)

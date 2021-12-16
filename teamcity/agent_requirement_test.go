@@ -15,8 +15,10 @@ func TestAgentRequirement_Create(t *testing.T) {
 	req, _ := teamcity.NewAgentRequirement(teamcity.Conditions.Equals, "param", "value")
 
 	sut := client.AgentRequirementService(buildType.ID)
-	sut.Create(req)
-	buildType, _ = client.BuildTypes.GetByID(buildType.ID) //refresh
+	_, err := sut.Create(req)
+	assert.NoError(err)
+
+	buildType, _ = client.BuildTypes.GetByID(buildType.ID) // refresh
 
 	all, _ := client.AgentRequirementService(buildType.ID).GetAll()
 	cleanUpProject(t, client, testBuildTypeProjectId)
@@ -96,11 +98,12 @@ func TestAgentRequirement_Delete(t *testing.T) {
 	nt, _ := teamcity.NewAgentRequirement(teamcity.Conditions.Equals, "param", "value")
 
 	created, err := sut.Create(nt)
-	cleanUpProject(t, client, bt.ProjectID)
+	require.NoError(err)
+	defer cleanUpProject(t, client, bt.ProjectID)
 
-	require.Nil(err)
+	err = sut.Delete(created.ID)
+	require.NoError(err)
 
-	sut.Delete(created.ID)
 	_, err = sut.GetByID(created.ID) // refresh
 
 	require.Error(err)
