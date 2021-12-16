@@ -37,6 +37,10 @@ build: ## Build the project for the current platform
 .PHONY: ci
 ci: test ## Run all the CI targets
 
+.PHONY: lint
+lint:
+	@golangci-lint run
+
 .PHONY: start-docker
 start-docker: ## Starts up docker container running TeamCity Server
 	@test -d  $(TEAMCITY_DATA_DIR) || bsdtar xfz $(INTEGRATION_TEST_DIR)/teamcity_data.tar.gz -C $(INTEGRATION_TEST_DIR)

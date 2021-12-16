@@ -87,7 +87,6 @@ func (o *ArtifactDependencyOptions) properties() *Properties {
 	switch o.ArtifactRevisionType {
 	case BuildWithSpecifiedNumber:
 		p.AddOrReplaceValue("revisionValue", o.RevisionNumber)
-		break
 	case LastBuildFinishedWithTag:
 		p.AddOrReplaceValue("revisionValue", o.RevisionNumber+".tcbuildtag")
 	default:

@@ -92,7 +92,6 @@ func TestArtifactDependency_Create(t *testing.T) {
 
 	require.Nil(t, err)
 
-	buildType, _ = client.BuildTypes.GetByID(buildType.ID) //refresh
 	actual, _ := sut.GetArtifactByID(created.ID())
 
 	cleanUpProject(t, client, testBuildTypeProjectId)

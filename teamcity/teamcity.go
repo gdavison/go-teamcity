@@ -10,8 +10,7 @@ import (
 	"time"
 
 	"github.com/dghubble/sling"
-	// goimports has a bug which attempts to remove this if unaliased
-	loghttp "github.com/motemen/go-loghttp"
+	"github.com/motemen/go-loghttp"
 
 	// Enable HTTP log tracing
 	_ "github.com/motemen/go-loghttp/global"
@@ -55,7 +54,6 @@ func init() {
 //Client represents the base for connecting to TeamCity
 type Client struct {
 	address string
-	baseURI string
 
 	HTTPClient   *http.Client
 	RetryTimeout time.Duration
