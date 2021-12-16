@@ -7,6 +7,10 @@ import (
 	"strings"
 )
 
+const (
+	defaultPropertySliceSeparator = "\\r\\n"
+)
+
 // Property represents a key/value/type structure used by several resources to extend their representation
 type Property struct {
 
@@ -172,7 +176,7 @@ func fillStructFromProperties(data interface{}, p *Properties) {
 					var sep string
 					sep, ok = f.Tag.Lookup("separator")
 					if !ok {
-						sep = "\\r\\n" // Use default
+						sep = defaultPropertySliceSeparator
 					}
 					sVal := reflect.ValueOf(strings.Split(pv, sep))
 					sf.Set(sVal)
@@ -194,8 +198,11 @@ func serializeToProperties(data interface{}) *Properties {
 			pv := reflect.ValueOf(data).Elem().Field(i)
 			switch pv.Kind() {
 			case reflect.Slice:
-				sep := "\\r\\n" // Use default
-				sep, _ = f.Tag.Lookup("separator")
+				var sep string
+				sep, ok = f.Tag.Lookup("separator")
+				if !ok {
+					sep = defaultPropertySliceSeparator
+				}
 				pVal := strings.Join(pv.Interface().([]string), sep)
 				props.AddOrReplaceValue(v, pVal)
 			case reflect.Bool:

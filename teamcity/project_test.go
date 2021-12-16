@@ -122,6 +122,7 @@ func TestProject_UpdateParent(t *testing.T) {
 	actual.SetParentProject(createdParent.ID)
 
 	actual, err = client.Projects.Update(actual)
+	require.NoError(t, err)
 
 	cleanUpProject(t, client, testProjectId)
 	cleanUpProject(t, client, createdParent.ID)
@@ -138,6 +139,7 @@ func TestProject_UpdateParameters(t *testing.T) {
 	sut := client.Projects
 
 	actual, err := sut.GetByID(created.ID) //Refresh
+	require.NoError(t, err)
 
 	//Update some fields
 	props := teamcity.NewParametersEmpty()
@@ -160,12 +162,14 @@ func TestProject_UpdateParametersWithRemoval(t *testing.T) {
 	sut := client.Projects
 
 	actual, err := sut.GetByID(created.ID) //Refresh
+	require.NoError(t, err)
 
 	params := teamcity.NewParametersEmpty()
 	params.AddOrReplaceValue(teamcity.ParameterTypes.Configuration, "param1", "value1")
 	params.AddOrReplaceValue(teamcity.ParameterTypes.Configuration, "param2", "value2")
 	actual.Parameters = params
 	actual, err = sut.Update(actual)
+	require.NoError(t, err)
 
 	actual.Parameters.Remove(teamcity.ParameterTypes.Configuration, "param2")
 	actual, err = sut.Update(actual)

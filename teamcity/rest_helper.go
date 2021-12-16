@@ -155,8 +155,7 @@ func (r *restHelper) post(path string, data interface{}, out interface{}, resour
 	defer response.Body.Close()
 
 	if response.StatusCode == 201 || response.StatusCode == 200 {
-		json.NewDecoder(response.Body).Decode(out)
-		return nil
+		return json.NewDecoder(response.Body).Decode(out)
 	}
 	dt, err := ioutil.ReadAll(response.Body)
 	if err != nil {
@@ -175,8 +174,7 @@ func (r *restHelper) put(path string, data interface{}, out interface{}, resourc
 	defer response.Body.Close()
 
 	if response.StatusCode == 201 || response.StatusCode == 200 {
-		json.NewDecoder(response.Body).Decode(out)
-		return nil
+		return json.NewDecoder(response.Body).Decode(out)
 	}
 	dt, err := ioutil.ReadAll(response.Body)
 	if err != nil {

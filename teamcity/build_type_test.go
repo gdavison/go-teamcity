@@ -98,7 +98,8 @@ func TestBuildType_Update(t *testing.T) {
 	created := createTestBuildTypeWithName(t, client, testBuildTypeProjectId, testBuildTypeId, true)
 	sut := client.BuildTypes
 
-	actual, err := sut.GetByID(created.ID) //Refresh
+	actual, err := sut.GetByID(created.ID) // Refresh
+	require.NoError(t, err)
 
 	//Update some fields
 	actual.Name = "Updated name"
@@ -147,6 +148,7 @@ func TestBuildType_UpdateParameters(t *testing.T) {
 	sut := client.BuildTypes
 
 	actual, err := sut.GetByID(created.ID) //Refresh
+	require.NoError(t, err)
 
 	//Update some fields
 	props := teamcity.NewParametersEmpty()
@@ -169,12 +171,14 @@ func TestBuildType_UpdateParametersWithRemoval(t *testing.T) {
 	sut := client.BuildTypes
 
 	actual, err := sut.GetByID(created.ID) //Refresh
+	require.NoError(t, err)
 
 	props := teamcity.NewParametersEmpty()
 	props.AddOrReplaceValue(teamcity.ParameterTypes.Configuration, "param1", "value1")
 	props.AddOrReplaceValue(teamcity.ParameterTypes.Configuration, "param2", "value2")
 	actual.Parameters = props
 	actual, err = sut.Update(actual)
+	require.NoError(t, err)
 
 	actual.Parameters.Remove(teamcity.ParameterTypes.Configuration, "param2")
 	actual, err = sut.Update(actual)
@@ -201,6 +205,8 @@ func TestBuildType_GetParametersExcludeInherited(t *testing.T) {
 
 	sut := client.BuildTypes
 	actual, err := sut.GetByID(created.ID) //Refresh
+	require.NoError(err)
+
 	props := teamcity.NewParametersEmpty()
 	props.AddOrReplaceValue(teamcity.ParameterTypes.Configuration, "param1", "value1")
 	props.AddOrReplaceValue(teamcity.ParameterTypes.Configuration, "param2", "value2")

@@ -392,6 +392,9 @@ func (s *BuildTypeService) UpdateSettings(id string, settings *Properties) error
 	for _, item := range settings.Items {
 		bodyProvider := textPlainBodyProvider{payload: item.Value}
 		req, err := s.sling.New().Put(fmt.Sprintf("%s/settings/%s", LocatorID(id), item.Name)).BodyProvider(bodyProvider).Add("Accept", "text/plain").Request()
+		if err != nil {
+			return err
+		}
 		response, err := s.httpClient.Do(req)
 		response.Body.Close()
 		if err != nil {
