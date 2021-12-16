@@ -11,7 +11,7 @@ type StepPowershell struct {
 	ID       string
 	Name     string
 	stepType string
-	stepJSON *stepJSON
+
 	isScript bool
 	//ScriptFile holds the name of script to run for this step.
 	ScriptFile string

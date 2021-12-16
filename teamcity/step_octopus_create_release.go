@@ -11,7 +11,6 @@ type StepOctopusCreateRelease struct {
 	ID       string
 	Name     string
 	stepType string
-	stepJSON *stepJSON
 
 	// Specify Octopus web portal URL.
 	Host string

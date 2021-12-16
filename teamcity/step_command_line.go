@@ -8,10 +8,10 @@ import (
 
 //StepCommandLine represents a a build step of type "CommandLine"
 type StepCommandLine struct {
-	ID           string
-	Name         string
-	stepType     string
-	stepJSON     *stepJSON
+	ID       string
+	Name     string
+	stepType string
+
 	isExecutable bool
 	//CustomScript contains code for platform specific script, like .cmd on windows or shell script on Unix-like environments.
 	CustomScript string
