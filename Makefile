@@ -60,7 +60,7 @@ test: start-docker ## Run the unit tests
 clean: clean-code clean-docker ## Clean all resources (!DESTRUCTIVE!)
 
 .PHONY: clean-code
-clean-code: ## Remove unwanted files in this project (!DESTRUCTIVE!
+clean-code: ## Remove unwanted files in this project (!DESTRUCTIVE!)
 	@cd $(TOPDIR) && git clean -ffdx && git reset --hard
 
 .PHONY: clean-docker
