@@ -24,6 +24,11 @@ func LocatorName(name string) Locator {
 	return Locator(url.QueryEscape("name:") + url.PathEscape(name))
 }
 
+// LocatorUUID creates a locator for Project/BuildType by UUID
+func LocatorUUID(uuid string) Locator {
+	return Locator(url.QueryEscape("uuid:") + uuid)
+}
+
 // LocatorKey creates a locator for Group by Key
 func LocatorKey(key string) Locator {
 	return Locator(url.QueryEscape("key:") + url.PathEscape(key))

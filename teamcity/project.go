@@ -19,6 +19,7 @@ type Project struct {
 	ParentProjectID string              `json:"parentProjectId,omitempty" xml:"parentProjectId"`
 	WebURL          string              `json:"webUrl,omitempty" xml:"webUrl"`
 	BuildTypes      BuildTypeReferences `json:"buildTypes,omitempty" xml:"buildTypes"`
+	UUID            string              `json:"uuid,omitempty" xml:"uuid"`
 }
 
 // ProjectReference contains basic information, usually enough to use as a type for relationships.
@@ -109,23 +110,28 @@ func (s *ProjectService) Create(project *Project) (*Project, error) {
 
 // GetByID Retrieves a project resource by ID
 func (s *ProjectService) GetByID(id string) (*Project, error) {
-	var out Project
-	locator := LocatorID(id).String()
-	err := s.restHelper.get(locator, &out, "project")
-	if err != nil {
-		return nil, err
-	}
-
-	//For now, filter all inherited parameters, until figuring out a proper way of exposing filtering options to the caller
-	out.Parameters = out.Parameters.NonInherited()
-	return &out, err
+	return s.Get(LocatorID(id))
 }
 
 // GetByName returns a project by its name. There are no duplicate names in projects for TeamCity
 func (s *ProjectService) GetByName(name string) (*Project, error) {
-	var out Project
+	return s.Get(LocatorName(name))
+}
 
-	err := s.restHelper.get(LocatorName(name).String(), &out, "project")
+// GetByUUID Retrieves a project resource by UUID
+func (s *ProjectService) GetByUUID(uuid string) (*Project, error) {
+	return s.Get(LocatorUUID(uuid))
+}
+
+func (s *ProjectService) fields() getFields {
+	return getFields{
+		Fields: "$long,uuid",
+	}
+}
+
+func (s *ProjectService) Get(locator Locator) (*Project, error) {
+	var out Project
+	err := s.restHelper.getWithFields(locator.String(), s.fields(), &out, "project")
 	if err != nil {
 		return nil, err
 	}
@@ -140,6 +146,29 @@ func (s *ProjectService) GetByName(name string) (*Project, error) {
 // This method also updates Settings and Parameters, but this is not an atomic operation. If an error occurs, it will be returned to caller what was updated or not.
 func (s *ProjectService) Update(project *Project) (*Project, error) {
 	return s.updateProject(project, false)
+}
+
+func (s *ProjectService) UpdateID(project *Project, newId string) (*Project, error) {
+	current, err := s.GetByUUID(project.UUID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Update ID
+	if newId != current.ID {
+		uuidLocator := LocatorUUID(project.UUID)
+		_, err = s.restHelper.putTextPlain(uuidLocator.String()+"/id", newId, "project id")
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	out, err := s.GetByUUID(project.UUID) //Refresh after update
+	if err != nil {
+		return nil, err
+	}
+
+	return out, nil
 }
 
 // Delete - Deletes a project

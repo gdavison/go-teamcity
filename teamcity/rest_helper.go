@@ -50,7 +50,15 @@ func (r *restHelper) getCustom(path string, out interface{}, resourceDescription
 }
 
 func (r *restHelper) get(path string, out interface{}, resourceDescription string) error {
-	request, _ := r.sling.New().Get(path).Request()
+	return r.getWithFields(path, getFields{}, out, resourceDescription)
+}
+
+type getFields struct {
+	Fields string `url:"fields,omitempty"`
+}
+
+func (r *restHelper) getWithFields(path string, fields getFields, out interface{}, resourceDescription string) error {
+	request, _ := r.sling.New().Get(path).QueryStruct(fields).Request()
 	response, err := r.httpClient.Do(request)
 	if err != nil {
 		return err
