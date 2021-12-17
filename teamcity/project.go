@@ -149,8 +149,13 @@ func (s *ProjectService) Update(project *Project) (*Project, error) {
 }
 
 // Delete - Deletes a project
+// Deprecated: Use DeleteLocator instead
 func (s *ProjectService) Delete(id string) error {
-	err := s.restHelper.deleteByIDWithSling(s.sling.New(), id, "project")
+	return s.DeleteLocator(LocatorID(id))
+}
+
+func (s *ProjectService) DeleteLocator(locator Locator) error {
+	err := s.restHelper.deleteByIDWithSling(s.sling.New(), locator.String(), "project")
 	return err
 }
 
