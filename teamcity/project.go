@@ -148,30 +148,6 @@ func (s *ProjectService) Update(project *Project) (*Project, error) {
 	return s.updateProject(LocatorUUID(project.UUID), project, false)
 }
 
-func (s *ProjectService) UpdateID(project *Project, newId string) (*Project, error) {
-	uuidLocator := LocatorUUID(project.UUID)
-	current, err := s.Get(uuidLocator)
-	if err != nil {
-		return nil, err
-	}
-
-	if newId == current.ID {
-		return current, nil
-	}
-
-	err = s.updateStringField(uuidLocator, "id", newId, "project id")
-	if err != nil {
-		return nil, err
-	}
-
-	out, err := s.Get(uuidLocator) //Refresh after update
-	if err != nil {
-		return nil, err
-	}
-
-	return out, nil
-}
-
 // Delete - Deletes a project
 func (s *ProjectService) Delete(id string) error {
 	err := s.restHelper.deleteByIDWithSling(s.sling.New(), id, "project")
@@ -203,6 +179,13 @@ func (s *ProjectService) updateProject(locator Locator, project *Project, isCrea
 		}
 	}
 
+	if current.ID != project.ID {
+		err := s.updateStringField(locator, "id", project.ID, "project id")
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	//Update Parent
 	if !isCreate {
 		// Only perform update if there is a change.
@@ -225,7 +208,7 @@ func (s *ProjectService) updateProject(locator Locator, project *Project, isCrea
 			return nil, err
 		}
 	}
-	out, err := s.GetByID(project.ID) //Refresh after update
+	out, err := s.Get(locator) //Refresh after update
 	if err != nil {
 		return nil, err
 	}

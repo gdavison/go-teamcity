@@ -131,8 +131,9 @@ func TestProject_UpdateID(t *testing.T) {
 	require.NoError(t, err)
 	defer cleanUpProject(t, client, created.ID)
 
-	actual, _ := client.Projects.GetByUUID(created.UUID)
-	_, err = client.Projects.UpdateID(actual, "Updated_Id")
+	actual, _ := client.Projects.GetByID(created.ID)
+	actual.ID = "Updated_Id"
+	_, err = client.Projects.Update(actual)
 	require.NoError(t, err)
 
 	actual, _ = client.Projects.GetByUUID(created.UUID)
