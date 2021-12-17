@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAgentPools_GetDefaultProject(t *testing.T) {
+func TestAgentPools_GetDefaultAgentPool(t *testing.T) {
 	client := setup()
 	assert := assert.New(t)
 
@@ -20,10 +20,10 @@ func TestAgentPools_GetDefaultProject(t *testing.T) {
 	assert.NoError(err)
 	assert.Equal("Default", retrievedPool.Name)
 	assert.Nil(retrievedPool.MaxAgents)
-	assert.True(len(retrievedPool.Projects.Project) == 1)
+	assert.Len(retrievedPool.Projects.Project, 1)
 }
 
-func TestAgentPools_GetDefaultProjectByName(t *testing.T) {
+func TestAgentPools_GetDefaultAgentPoolByName(t *testing.T) {
 	client := setup()
 	assert := assert.New(t)
 
