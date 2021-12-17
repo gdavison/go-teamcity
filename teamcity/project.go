@@ -91,7 +91,7 @@ func newProjectService(base *sling.Sling, client *http.Client) *ProjectService {
 
 // Create creates a new project at root project level
 func (s *ProjectService) Create(project *Project) (*Project, error) {
-	var created ProjectReference
+	var created Project
 	err := s.restHelper.post("", project, &created, "project")
 	if err != nil {
 		return nil, err
@@ -99,7 +99,7 @@ func (s *ProjectService) Create(project *Project) (*Project, error) {
 
 	//initial creation does not persist "description" or parameters, so in order to be consistent with the constructor, call an update after
 	project.ID = created.ID
-	updated, err := s.updateProject(project, true)
+	updated, err := s.updateProject(LocatorID(created.ID), project, true)
 
 	if err != nil {
 		return nil, err
@@ -145,25 +145,26 @@ func (s *ProjectService) Get(locator Locator) (*Project, error) {
 // TeamCity API does not support "PUT" on the whole project resource, so the only updateable field is "Description". Other field updates will be ignored.
 // This method also updates Settings and Parameters, but this is not an atomic operation. If an error occurs, it will be returned to caller what was updated or not.
 func (s *ProjectService) Update(project *Project) (*Project, error) {
-	return s.updateProject(project, false)
+	return s.updateProject(LocatorUUID(project.UUID), project, false)
 }
 
 func (s *ProjectService) UpdateID(project *Project, newId string) (*Project, error) {
-	current, err := s.GetByUUID(project.UUID)
+	uuidLocator := LocatorUUID(project.UUID)
+	current, err := s.Get(uuidLocator)
 	if err != nil {
 		return nil, err
 	}
 
-	// Update ID
-	if newId != current.ID {
-		uuidLocator := LocatorUUID(project.UUID)
-		_, err = s.restHelper.putTextPlain(uuidLocator.String()+"/id", newId, "project id")
-		if err != nil {
-			return nil, err
-		}
+	if newId == current.ID {
+		return current, nil
 	}
 
-	out, err := s.GetByUUID(project.UUID) //Refresh after update
+	err = s.updateStringField(uuidLocator, "id", newId, "project id")
+	if err != nil {
+		return nil, err
+	}
+
+	out, err := s.Get(uuidLocator) //Refresh after update
 	if err != nil {
 		return nil, err
 	}
@@ -177,23 +178,33 @@ func (s *ProjectService) Delete(id string) error {
 	return err
 }
 
-func (s *ProjectService) updateProject(project *Project, isCreate bool) (*Project, error) {
-	_, err := s.restHelper.putTextPlain(project.ID+"/name", project.Name, "project name")
+func (s *ProjectService) updateStringField(locator Locator, fieldName string, value string, fieldDescription string) error {
+	_, err := s.restHelper.putTextPlain(fmt.Sprintf("%s/%s", locator, fieldName), value, fieldDescription)
+	return err
+}
+
+func (s *ProjectService) updateProject(locator Locator, project *Project, isCreate bool) (*Project, error) {
+	current, err := s.Get(locator)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = s.restHelper.putTextPlain(project.ID+"/description", project.Description, "project description")
-	if err != nil {
-		return nil, err
+	if current.Name != project.Name {
+		err := s.updateStringField(locator, "name", project.Name, "project name")
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if current.Description != project.Description {
+		err := s.updateStringField(locator, "description", project.Description, "project description")
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	//Update Parent
 	if !isCreate {
-		current, err := s.GetByID(project.ID)
-		if err != nil {
-			return nil, err
-		}
 		// Only perform update if there is a change.
 		// Or else TeamCity will "copy" the project to the same parent project, altering it's name
 		// For instance: "project" -> "project (1)"
