@@ -80,6 +80,10 @@ func (p *Project) ProjectReference() *ProjectReference {
 	}
 }
 
+func (p *Project) Locator() Locator {
+	return LocatorUUID(p.UUID)
+}
+
 func newProjectService(base *sling.Sling, client *http.Client) *ProjectService {
 	sling := base.Path("projects/")
 	return &ProjectService{
