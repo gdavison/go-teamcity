@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/dghubble/sling"
 )
 
-//BuildFeature is an interface representing different types of build features that can be added to a build type.
+// BuildFeature is an interface representing different types of build features that can be added to a build type.
 type BuildFeature interface {
 	ID() string
 	SetID(value string)
@@ -40,7 +40,7 @@ type Features struct {
 	Items []buildFeatureJSON `json:"feature"`
 }
 
-//BuildFeatureService provides operations for managing build features for a buildType
+// BuildFeatureService provides operations for managing build features for a buildType
 type BuildFeatureService struct {
 	BuildTypeID string
 	httpClient  *http.Client
@@ -56,7 +56,7 @@ func newBuildFeatureService(buildTypeID string, c *http.Client, base *sling.Slin
 	}
 }
 
-//Create adds a new build feature to build type
+// Create adds a new build feature to build type
 func (s *BuildFeatureService) Create(bf BuildFeature) (BuildFeature, error) {
 	if bf == nil {
 		return nil, errors.New("bf can't be nil")
@@ -81,7 +81,7 @@ func (s *BuildFeatureService) Create(bf BuildFeature) (BuildFeature, error) {
 	return s.readBuildFeatureResponse(resp)
 }
 
-//GetByID returns a build feature by its id
+// GetByID returns a build feature by its id
 func (s *BuildFeatureService) GetByID(id string) (BuildFeature, error) {
 	req, err := s.base.New().Get(id).Request()
 
@@ -104,7 +104,7 @@ func (s *BuildFeatureService) GetByID(id string) (BuildFeature, error) {
 	return s.readBuildFeatureResponse(resp)
 }
 
-//Delete removes a build feature from the build configuration by its id.
+// Delete removes a build feature from the build configuration by its id.
 func (s *BuildFeatureService) Delete(id string) error {
 	request, _ := s.base.New().Delete(id).Request()
 	response, err := s.httpClient.Do(request)
@@ -118,7 +118,7 @@ func (s *BuildFeatureService) Delete(id string) error {
 	}
 
 	if response.StatusCode != 200 && response.StatusCode != 204 {
-		respData, err := ioutil.ReadAll(response.Body)
+		respData, err := io.ReadAll(response.Body)
 		if err != nil {
 			return err
 		}
@@ -129,7 +129,7 @@ func (s *BuildFeatureService) Delete(id string) error {
 }
 
 func (s *BuildFeatureService) readBuildFeatureResponse(resp *http.Response) (BuildFeature, error) {
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

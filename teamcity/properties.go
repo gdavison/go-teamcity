@@ -81,7 +81,7 @@ func (p *Properties) Add(prop *Property) {
 	p.Items = append(p.Items, prop)
 }
 
-//Remove a property if it exists in the collection
+// Remove a property if it exists in the collection
 func (p *Properties) Remove(n string) {
 	removed := -1
 	for i := range p.Items {

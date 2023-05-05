@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-//GitVcsRoot is a VCS Root of type Git, strongly-typed model.
+// GitVcsRoot is a VCS Root of type Git, strongly-typed model.
 type GitVcsRoot struct {
 	Options *GitVcsRootOptions
 
@@ -22,7 +22,7 @@ type GitVcsRoot struct {
 	properties                *Properties
 }
 
-//NewGitVcsRoot returns a VCS Root instance that connects to Git VCS.
+// NewGitVcsRoot returns a VCS Root instance that connects to Git VCS.
 func NewGitVcsRoot(projectID string, name string, opts *GitVcsRootOptions) (*GitVcsRoot, error) {
 	if projectID == "" {
 		return nil, errors.New("projectID is required")
@@ -50,52 +50,52 @@ func NewGitVcsRoot(projectID string, name string, opts *GitVcsRootOptions) (*Git
 	}, nil
 }
 
-//GetID returns the ID of this VCS Root.
+// GetID returns the ID of this VCS Root.
 func (d *GitVcsRoot) GetID() string {
 	return d.ID
 }
 
-//VcsName returns the type of VCS Root. See VcsNames
+// VcsName returns the type of VCS Root. See VcsNames
 func (d *GitVcsRoot) VcsName() string {
 	return VcsNames.Git
 }
 
-//Name returns the name of VCS Root.
+// Name returns the name of VCS Root.
 func (d *GitVcsRoot) Name() string {
 	return d.name
 }
 
-//SetName changes the name of VCS Root.
+// SetName changes the name of VCS Root.
 func (d *GitVcsRoot) SetName(name string) {
 	d.name = name
 }
 
-//ModificationCheckInterval returns how often TeamCity polls the VCS repository for VCS changes (in seconds).
+// ModificationCheckInterval returns how often TeamCity polls the VCS repository for VCS changes (in seconds).
 func (d *GitVcsRoot) ModificationCheckInterval() *int32 {
 	return d.modificationCheckInterval
 }
 
-//SetModificationCheckInterval specifies how often TeamCity polls the VCS repository for VCS changes (in seconds).
+// SetModificationCheckInterval specifies how often TeamCity polls the VCS repository for VCS changes (in seconds).
 func (d *GitVcsRoot) SetModificationCheckInterval(seconds int32) {
 	d.modificationCheckInterval = &seconds
 }
 
-//ProjectID returns the projectID where this VCS Root is defined
+// ProjectID returns the projectID where this VCS Root is defined
 func (d *GitVcsRoot) ProjectID() string {
 	return d.Project.ID
 }
 
-//SetProjectID specifies the project for this VCS Root. When moving VCS Roots between projects, it must not be in use by any other build configurations or sub-projects.
+// SetProjectID specifies the project for this VCS Root. When moving VCS Roots between projects, it must not be in use by any other build configurations or sub-projects.
 func (d *GitVcsRoot) SetProjectID(id string) {
 	d.Project.ID = id
 }
 
-//Properties returns the properties for this VCS Root
+// Properties returns the properties for this VCS Root
 func (d *GitVcsRoot) Properties() *Properties {
 	return d.Options.properties()
 }
 
-//MarshalJSON implements JSON serialization for GitVcsRoot
+// MarshalJSON implements JSON serialization for GitVcsRoot
 func (d *GitVcsRoot) MarshalJSON() ([]byte, error) {
 	out := &vcsRootJSON{
 		ID:         d.ID,
@@ -112,7 +112,7 @@ func (d *GitVcsRoot) MarshalJSON() ([]byte, error) {
 	return json.Marshal(out)
 }
 
-//UnmarshalJSON implements JSON deserialization for GitVcsRoot
+// UnmarshalJSON implements JSON deserialization for GitVcsRoot
 func (d *GitVcsRoot) UnmarshalJSON(data []byte) error {
 	var aux vcsRootJSON
 	if err := json.Unmarshal(data, &aux); err != nil {

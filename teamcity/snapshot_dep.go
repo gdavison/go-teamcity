@@ -32,7 +32,7 @@ type SnapshotDependency struct {
 	Type string `json:"type,omitempty" xml:"type"`
 }
 
-//SnapshotDependencies represents a collection of SnapshotDependency
+// SnapshotDependencies represents a collection of SnapshotDependency
 type SnapshotDependencies struct {
 	// count
 	Count int32 `json:"count,omitempty" xml:"count"`

@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//PropertyAssertions is a helper for tests that are defined in teamcity package. Not sure how to factor these out in a proper place.
+// PropertyAssertions is a helper for tests that are defined in teamcity package. Not sure how to factor these out in a proper place.
 type PropertyAssertions struct {
 	a *assert.Assertions
 	t *testing.T

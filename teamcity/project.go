@@ -38,9 +38,9 @@ type ProjectService struct {
 	restHelper *restHelper
 }
 
-//NewProject returns an instance of a Project. A non-empty name is required.
-//Description can be an empty string and will be omitted.
-//For creating a top-level project, pass empty to parentProjectId.
+// NewProject returns an instance of a Project. A non-empty name is required.
+// Description can be an empty string and will be omitted.
+// For creating a top-level project, pass empty to parentProjectId.
 func NewProject(name string, description string, parentProjectID string) (*Project, error) {
 	if name == "" {
 		return nil, fmt.Errorf("name is required")
@@ -60,7 +60,7 @@ func NewProject(name string, description string, parentProjectID string) (*Proje
 	}, nil
 }
 
-//SetParentProject changes this Project instance's parent project
+// SetParentProject changes this Project instance's parent project
 func (p *Project) SetParentProject(parentID string) {
 	p.ParentProjectID = parentID
 	p.ParentProject = &ProjectReference{
@@ -68,7 +68,7 @@ func (p *Project) SetParentProject(parentID string) {
 	}
 }
 
-//ProjectReference converts a project instance to a ProjectReference
+// ProjectReference converts a project instance to a ProjectReference
 func (p *Project) ProjectReference() *ProjectReference {
 	return &ProjectReference{
 		ID:          p.ID,
@@ -121,7 +121,7 @@ func (s *ProjectService) GetByID(id string) (*Project, error) {
 	return &out, err
 }
 
-//GetByName returns a project by its name. There are no duplicate names in projects for TeamCity
+// GetByName returns a project by its name. There are no duplicate names in projects for TeamCity
 func (s *ProjectService) GetByName(name string) (*Project, error) {
 	var out Project
 
@@ -135,14 +135,14 @@ func (s *ProjectService) GetByName(name string) (*Project, error) {
 	return &out, err
 }
 
-//Update changes the resource in-place for this project.
-//TeamCity API does not support "PUT" on the whole project resource, so the only updateable field is "Description". Other field updates will be ignored.
-//This method also updates Settings and Parameters, but this is not an atomic operation. If an error occurs, it will be returned to caller what was updated or not.
+// Update changes the resource in-place for this project.
+// TeamCity API does not support "PUT" on the whole project resource, so the only updateable field is "Description". Other field updates will be ignored.
+// This method also updates Settings and Parameters, but this is not an atomic operation. If an error occurs, it will be returned to caller what was updated or not.
 func (s *ProjectService) Update(project *Project) (*Project, error) {
 	return s.updateProject(project, false)
 }
 
-//Delete - Deletes a project
+// Delete - Deletes a project
 func (s *ProjectService) Delete(id string) error {
 	err := s.restHelper.deleteByIDWithSling(s.sling.New(), id, "project")
 	return err

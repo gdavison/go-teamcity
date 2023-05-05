@@ -2,14 +2,14 @@ package teamcity
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
 	"github.com/dghubble/sling"
 )
 
-//Triggers represents a typed, serializable collection of Trigger
+// Triggers represents a typed, serializable collection of Trigger
 type Triggers struct {
 	// count
 	Count int32 `json:"count,omitempty" xml:"count"`
@@ -36,7 +36,7 @@ func newTriggerService(buildTypeID string, c *http.Client, base *sling.Sling) *T
 	}
 }
 
-//AddTrigger adds a new build trigger to a build type
+// AddTrigger adds a new build trigger to a build type
 func (s *TriggerService) AddTrigger(t Trigger) (Trigger, error) {
 	var created Trigger
 	err := s.restHelper.postCustom("", t, &created, "build trigger", triggerReadingFunc)
@@ -52,7 +52,7 @@ func (s *TriggerService) AddTrigger(t Trigger) (Trigger, error) {
 	return created, nil
 }
 
-//GetByID returns a build trigger by its id
+// GetByID returns a build trigger by its id
 func (s *TriggerService) GetByID(id string) (Trigger, error) {
 	var out Trigger
 	err := s.restHelper.getCustom(id, &out, "build trigger", triggerReadingFunc)
@@ -64,7 +64,7 @@ func (s *TriggerService) GetByID(id string) (Trigger, error) {
 	return out, nil
 }
 
-//Delete removes a build trigger from the build configuration by its id
+// Delete removes a build trigger from the build configuration by its id
 func (s *TriggerService) Delete(id string) error {
 	request, _ := s.base.New().Delete(id).Request()
 	response, err := s.httpClient.Do(request)
@@ -78,7 +78,7 @@ func (s *TriggerService) Delete(id string) error {
 	}
 
 	if response.StatusCode != 200 && response.StatusCode != 204 {
-		respData, err := ioutil.ReadAll(response.Body)
+		respData, err := io.ReadAll(response.Body)
 		if err != nil {
 			return err
 		}

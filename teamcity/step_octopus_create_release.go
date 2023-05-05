@@ -97,7 +97,7 @@ func (s *StepOctopusCreateRelease) serializable() *stepJSON {
 	}
 }
 
-//MarshalJSON implements JSON serialization for StepOctopusCreateRelease
+// MarshalJSON implements JSON serialization for StepOctopusCreateRelease
 func (s *StepOctopusCreateRelease) MarshalJSON() ([]byte, error) {
 	out := s.serializable()
 	return json.Marshal(out)

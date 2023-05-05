@@ -3,7 +3,7 @@ package teamcity
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httputil"
 	"os"
@@ -32,10 +32,10 @@ func TokenAuth(token string) Auth {
 	return tokenAuth{token}
 }
 
-//DebugRequests toggle to enable tracing requests to stdout
+// DebugRequests toggle to enable tracing requests to stdout
 var DebugRequests = false
 
-//DebugResponses toggle to enable tracing responses to stdout
+// DebugResponses toggle to enable tracing responses to stdout
 var DebugResponses = false
 
 func init() {
@@ -51,7 +51,7 @@ func init() {
 	}
 }
 
-//Client represents the base for connecting to TeamCity
+// Client represents the base for connecting to TeamCity
 type Client struct {
 	address string
 
@@ -129,12 +129,12 @@ func NewWithAddress(userName, password, address string, httpClient *http.Client)
 	return NewClientWithAddress(BasicAuth(userName, password), address, httpClient)
 }
 
-//AgentRequirementService returns a service to manage agent requirements for a build configuration with given id
+// AgentRequirementService returns a service to manage agent requirements for a build configuration with given id
 func (c *Client) AgentRequirementService(id string) *AgentRequirementService {
 	return newAgentRequirementService(id, c.HTTPClient, c.commonBase.New())
 }
 
-//BuildFeatureService returns a service to manage agent requirements for a build configuration with given id
+// BuildFeatureService returns a service to manage agent requirements for a build configuration with given id
 func (c *Client) BuildFeatureService(id string) *BuildFeatureService {
 	return newBuildFeatureService(id, c.HTTPClient, c.commonBase.New())
 }
@@ -144,17 +144,17 @@ func (c *Client) ProjectFeatureService(id string) *ProjectFeatureService {
 	return newProjectFeatureService(id, c.HTTPClient, c.commonBase.New())
 }
 
-//DependencyService returns a service to manage snapshot and artifact dependencies for a build configuration with given id
+// DependencyService returns a service to manage snapshot and artifact dependencies for a build configuration with given id
 func (c *Client) DependencyService(id string) *DependencyService {
 	return NewDependencyService(id, c.HTTPClient, c.commonBase.New())
 }
 
-//BuildTemplateService returns a service to manage template associations for a build configuration with given id
+// BuildTemplateService returns a service to manage template associations for a build configuration with given id
 func (c *Client) BuildTemplateService(id string) *BuildTemplateService {
 	return NewBuildTemplateService(id, c.HTTPClient, c.commonBase.New())
 }
 
-//TriggerService returns a service to manage build triggers for a build configuration with given id
+// TriggerService returns a service to manage build triggers for a build configuration with given id
 func (c *Client) TriggerService(buildTypeID string) *TriggerService {
 	return newTriggerService(buildTypeID, c.HTTPClient, c.commonBase.New())
 }
@@ -168,7 +168,7 @@ func (c *Client) Validate() (bool, error) {
 	}
 
 	if response.StatusCode != 200 && response.StatusCode != 403 {
-		body, err := ioutil.ReadAll(response.Body)
+		body, err := io.ReadAll(response.Body)
 		if err != nil {
 			return false, err
 		}

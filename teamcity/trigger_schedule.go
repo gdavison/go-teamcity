@@ -20,7 +20,7 @@ const (
 	TriggerSchedulingCron TriggerSchedulingPolicy = "cron"
 )
 
-//TriggerSchedule represents a build trigger that fires on a time-bound schedule
+// TriggerSchedule represents a build trigger that fires on a time-bound schedule
 type TriggerSchedule struct {
 	triggerJSON *triggerJSON
 	buildTypeID string
@@ -34,47 +34,47 @@ type TriggerSchedule struct {
 	Options          *TriggerScheduleOptions
 }
 
-//ID for this entity
+// ID for this entity
 func (t *TriggerSchedule) ID() string {
 	return t.triggerJSON.ID
 }
 
-//Type returns TriggerTypes.Schedule ("schedulingTrigger")
+// Type returns TriggerTypes.Schedule ("schedulingTrigger")
 func (t *TriggerSchedule) Type() string {
 	return TriggerTypes.Schedule
 }
 
-//SetDisabled controls whether this trigger is disabled or not
+// SetDisabled controls whether this trigger is disabled or not
 func (t *TriggerSchedule) SetDisabled(disabled bool) {
 	t.triggerJSON.Disabled = NewBool(disabled)
 }
 
-//Disabled gets the disabled status for this trigger
+// Disabled gets the disabled status for this trigger
 func (t *TriggerSchedule) Disabled() bool {
 	return *t.triggerJSON.Disabled
 }
 
-//BuildTypeID gets the build type identifier
+// BuildTypeID gets the build type identifier
 func (t *TriggerSchedule) BuildTypeID() string {
 	return t.buildTypeID
 }
 
-//SetBuildTypeID sets the build type identifier
+// SetBuildTypeID sets the build type identifier
 func (t *TriggerSchedule) SetBuildTypeID(id string) {
 	t.buildTypeID = id
 }
 
-//NewTriggerScheduleDaily returns a TriggerSchedule that fires daily on the hour/minute specified
+// NewTriggerScheduleDaily returns a TriggerSchedule that fires daily on the hour/minute specified
 func NewTriggerScheduleDaily(sourceBuildID string, hour uint, minute uint, timezone string, rules []string) (*TriggerSchedule, error) {
 	return NewTriggerSchedule(TriggerSchedulingDaily, sourceBuildID, time.Sunday, hour, minute, timezone, rules, NewTriggerScheduleOptions())
 }
 
-//NewTriggerScheduleWeekly returns a TriggerSchedule that fires weekly on the weekday and hour/minute specified
+// NewTriggerScheduleWeekly returns a TriggerSchedule that fires weekly on the weekday and hour/minute specified
 func NewTriggerScheduleWeekly(sourceBuildID string, weekday time.Weekday, hour uint, minute uint, timezone string, rules []string) (*TriggerSchedule, error) {
 	return NewTriggerSchedule(TriggerSchedulingWeekly, sourceBuildID, weekday, hour, minute, timezone, rules, NewTriggerScheduleOptions())
 }
 
-//NewTriggerSchedule returns a TriggerSchedule with the scheduling policy and options specified
+// NewTriggerSchedule returns a TriggerSchedule with the scheduling policy and options specified
 func NewTriggerSchedule(schedulingPolicy TriggerSchedulingPolicy, sourceBuildID string, weekday time.Weekday, hour uint, minute uint, timezone string, rules []string, opt *TriggerScheduleOptions) (*TriggerSchedule, error) {
 	if hour > 23 {
 		return nil, fmt.Errorf("invalid hour: %d, must be between 0-23", hour)
@@ -191,7 +191,7 @@ func (t *TriggerSchedule) properties() *Properties {
 	return props
 }
 
-//MarshalJSON implements JSON serialization for TriggerSchedule
+// MarshalJSON implements JSON serialization for TriggerSchedule
 func (t *TriggerSchedule) MarshalJSON() ([]byte, error) {
 	props := t.properties()
 	optProps := t.Options.properties()
@@ -209,7 +209,7 @@ func (t *TriggerSchedule) MarshalJSON() ([]byte, error) {
 	return json.Marshal(out)
 }
 
-//UnmarshalJSON implements JSON deserialization for TriggerSchedule
+// UnmarshalJSON implements JSON deserialization for TriggerSchedule
 func (t *TriggerSchedule) UnmarshalJSON(data []byte) error {
 	var aux triggerJSON
 	if err := json.Unmarshal(data, &aux); err != nil {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-//TriggerBuildFinish represents a build trigger that fires when the given build ID to is finished
+// TriggerBuildFinish represents a build trigger that fires when the given build ID to is finished
 type TriggerBuildFinish struct {
 	triggerJSON   *triggerJSON
 	buildTypeID   string
@@ -13,32 +13,32 @@ type TriggerBuildFinish struct {
 	Options       *TriggerBuildFinishOptions
 }
 
-//ID for this entity
+// ID for this entity
 func (t *TriggerBuildFinish) ID() string {
 	return t.triggerJSON.ID
 }
 
-//Type returns TriggerTypes.BuildFinish ("buildDependencyTrigger")
+// Type returns TriggerTypes.BuildFinish ("buildDependencyTrigger")
 func (t *TriggerBuildFinish) Type() string {
 	return TriggerTypes.BuildFinish
 }
 
-//SetDisabled controls whether this trigger is disabled or not
+// SetDisabled controls whether this trigger is disabled or not
 func (t *TriggerBuildFinish) SetDisabled(disabled bool) {
 	t.triggerJSON.Disabled = NewBool(disabled)
 }
 
-//Disabled gets the disabled status for this trigger
+// Disabled gets the disabled status for this trigger
 func (t *TriggerBuildFinish) Disabled() bool {
 	return *t.triggerJSON.Disabled
 }
 
-//BuildTypeID gets the build type identifier
+// BuildTypeID gets the build type identifier
 func (t *TriggerBuildFinish) BuildTypeID() string {
 	return t.buildTypeID
 }
 
-//SetBuildTypeID sets the build type identifier
+// SetBuildTypeID sets the build type identifier
 func (t *TriggerBuildFinish) SetBuildTypeID(id string) {
 	t.buildTypeID = id
 }
@@ -68,7 +68,7 @@ func (t *TriggerBuildFinish) properties() *Properties {
 	return props
 }
 
-//MarshalJSON implements JSON serialization for TriggerVcs
+// MarshalJSON implements JSON serialization for TriggerVcs
 func (t *TriggerBuildFinish) MarshalJSON() ([]byte, error) {
 	out := &triggerJSON{
 		ID:         t.ID(),
@@ -80,7 +80,7 @@ func (t *TriggerBuildFinish) MarshalJSON() ([]byte, error) {
 	return json.Marshal(out)
 }
 
-//UnmarshalJSON implements JSON deserialization for TriggerBuildFinish
+// UnmarshalJSON implements JSON deserialization for TriggerBuildFinish
 func (t *TriggerBuildFinish) UnmarshalJSON(data []byte) error {
 	var aux triggerJSON
 	if err := json.Unmarshal(data, &aux); err != nil {

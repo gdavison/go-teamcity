@@ -3,13 +3,13 @@ package teamcity
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/dghubble/sling"
 )
 
-//ConditionStrings - All possible condition strings. Do not change the values.
+// ConditionStrings - All possible condition strings. Do not change the values.
 var ConditionStrings = []string{
 	"exists",
 	"equals",
@@ -30,7 +30,7 @@ var ConditionStrings = []string{
 	"ver-no-less-than",
 }
 
-//Conditions - Possible conditions for requirements. Do not change the values.
+// Conditions - Possible conditions for requirements. Do not change the values.
 var Conditions = struct {
 	Exists            string
 	Equals            string
@@ -90,13 +90,13 @@ type AgentRequirement struct {
 	Properties *Properties `json:"properties,omitempty"`
 }
 
-//Name - Getter for "property-name" field of the requirement
+// Name - Getter for "property-name" field of the requirement
 func (a *AgentRequirement) Name() string {
 	v, _ := a.Properties.GetOk("property-name")
 	return v
 }
 
-//Value - Getter for "property-value" field of the requirement
+// Value - Getter for "property-value" field of the requirement
 func (a *AgentRequirement) Value() string {
 	v, _ := a.Properties.GetOk("property-value")
 	return v
@@ -171,7 +171,7 @@ func newAgentRequirementService(buildTypeID string, client *http.Client, base *s
 	}
 }
 
-//Create a new agent requirement for build type
+// Create a new agent requirement for build type
 func (s *AgentRequirementService) Create(req *AgentRequirement) (*AgentRequirement, error) {
 	var created AgentRequirement
 	_, err := s.base.New().Post("").BodyJSON(req).ReceiveSuccess(&created)
@@ -184,7 +184,7 @@ func (s *AgentRequirementService) Create(req *AgentRequirement) (*AgentRequireme
 	return &created, nil
 }
 
-//GetByID returns an agent requirement by its id
+// GetByID returns an agent requirement by its id
 func (s *AgentRequirementService) GetByID(id string) (*AgentRequirement, error) {
 	var out AgentRequirement
 	resp, err := s.base.New().Get(id).ReceiveSuccess(&out)
@@ -200,7 +200,7 @@ func (s *AgentRequirementService) GetByID(id string) (*AgentRequirement, error) 
 	return &out, nil
 }
 
-//GetAll returns all agent requirements for a given build configuration
+// GetAll returns all agent requirements for a given build configuration
 func (s *AgentRequirementService) GetAll() ([]*AgentRequirement, error) {
 	var aux agentRequirementsJSON
 	err := s.restHelper.get("", &aux, "agent requirements")
@@ -213,7 +213,7 @@ func (s *AgentRequirementService) GetAll() ([]*AgentRequirement, error) {
 	return aux.Items, nil
 }
 
-//Delete removes an agent requirement from the build configuration by its id
+// Delete removes an agent requirement from the build configuration by its id
 func (s *AgentRequirementService) Delete(id string) error {
 	request, _ := s.base.New().Delete(id).Request()
 	response, err := s.httpClient.Do(request)
@@ -227,7 +227,7 @@ func (s *AgentRequirementService) Delete(id string) error {
 	}
 
 	if response.StatusCode != 200 && response.StatusCode != 204 {
-		respData, err := ioutil.ReadAll(response.Body)
+		respData, err := io.ReadAll(response.Body)
 		if err != nil {
 			return err
 		}

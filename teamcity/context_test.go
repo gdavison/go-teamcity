@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"testing"
-	"time"
 
 	"github.com/cvbarros/go-teamcity/teamcity"
 	"github.com/stretchr/testify/require"
@@ -25,12 +24,7 @@ func NewTc(prefix string, t *testing.T) *TestContext {
 }
 
 func (tc *TestContext) RandomName() string {
-	reseed()
-	return fmt.Sprintf("%s-%d", tc.Prefix, rand.New(rand.NewSource(time.Now().UnixNano())).Int())
-}
-
-func reseed() {
-	rand.Seed(time.Now().UTC().UnixNano())
+	return fmt.Sprintf("%s-%d", tc.Prefix, rand.Int())
 }
 
 var BuildTypeContextOptionsDefault = BuildTypeContextOptions{

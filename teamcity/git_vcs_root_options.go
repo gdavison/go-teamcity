@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-//GitAuthMethod enum is to specify the authentication method when connecting to Git VCS.
+// GitAuthMethod enum is to specify the authentication method when connecting to Git VCS.
 type GitAuthMethod string
 
 const (
@@ -27,7 +27,7 @@ const (
 	GitAuthSSHCustomKey GitAuthMethod = "PRIVATE_KEY_FILE"
 )
 
-//GitAgentCleanPolicy enum specifies when the "git clean" should be run on the agent.
+// GitAgentCleanPolicy enum specifies when the "git clean" should be run on the agent.
 type GitAgentCleanPolicy string
 
 const (
@@ -41,7 +41,7 @@ const (
 	CleanPolicyNever GitAgentCleanPolicy = "NEVER"
 )
 
-//GitAgentCleanFilesPolicy enum specifies which files will be removed when "git clean" command is run on agent.
+// GitAgentCleanFilesPolicy enum specifies which files will be removed when "git clean" command is run on agent.
 type GitAgentCleanFilesPolicy string
 
 const (
@@ -134,19 +134,19 @@ type GitVcsRootOptions struct {
 	UsernameStyle GitVcsUsernameStyle `prop:"usernameStyle"`
 }
 
-//NewGitVcsRootOptions returns a new instance of GitVcsRootOptions with default GitAgentSettings
+// NewGitVcsRootOptions returns a new instance of GitVcsRootOptions with default GitAgentSettings
 func NewGitVcsRootOptions(defaultBranch string, fetchURL string, pushURL string, auth GitAuthMethod, username string, password string) (*GitVcsRootOptions, error) {
 	return NewGitVcsRootOptionsWithAgentSettings(defaultBranch, fetchURL, pushURL, auth, username, password, nil)
 }
 
-//NewGitVcsRootOptionsDefaults returns a new instance of GitVcsRootOptions with default values
-//Anonymous auth method
-//Default AgentSettings
+// NewGitVcsRootOptionsDefaults returns a new instance of GitVcsRootOptions with default values
+// Anonymous auth method
+// Default AgentSettings
 func NewGitVcsRootOptionsDefaults(defaultBranch string, fetchURL string) (*GitVcsRootOptions, error) {
 	return NewGitVcsRootOptions(defaultBranch, fetchURL, "", GitAuthMethodAnonymous, "", "")
 }
 
-//NewGitVcsRootOptionsWithAgentSettings returns a new instance of GitVcsRootOptions with specified GitAgentSettings
+// NewGitVcsRootOptionsWithAgentSettings returns a new instance of GitVcsRootOptions with specified GitAgentSettings
 func NewGitVcsRootOptionsWithAgentSettings(defaultBranch string, fetchURL string, pushURL string, auth GitAuthMethod, username string, password string, agentSettings *GitAgentSettings) (*GitVcsRootOptions, error) {
 	if auth == "" {
 		return nil, errors.New("auth is required")

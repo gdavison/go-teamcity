@@ -15,32 +15,32 @@ type ArtifactDependency struct {
 	Options *ArtifactDependencyOptions
 }
 
-//ID for this entity
+// ID for this entity
 func (s *ArtifactDependency) ID() string {
 	return s.dependencyJSON.ID
 }
 
-//Type for this entity
+// Type for this entity
 func (s *ArtifactDependency) Type() string {
 	return "artifact_dependency"
 }
 
-//BuildTypeID gets the build type identifier
+// BuildTypeID gets the build type identifier
 func (s *ArtifactDependency) BuildTypeID() string {
 	return s.buildTypeID
 }
 
-//SetBuildTypeID sets the build type identifier
+// SetBuildTypeID sets the build type identifier
 func (s *ArtifactDependency) SetBuildTypeID(id string) {
 	s.buildTypeID = id
 }
 
-//SetDisabled controls whether this dependency is disabled or not
+// SetDisabled controls whether this dependency is disabled or not
 func (s *ArtifactDependency) SetDisabled(disabled bool) {
 	s.dependencyJSON.Disabled = NewBool(disabled)
 }
 
-//Disabled gets the disabled status for this dependency
+// Disabled gets the disabled status for this dependency
 func (s *ArtifactDependency) Disabled() bool {
 	return *s.dependencyJSON.Disabled
 }
@@ -67,7 +67,7 @@ func NewArtifactDependency(sourceBuildTypeID string, opt *ArtifactDependencyOpti
 	}, nil
 }
 
-//MarshalJSON implements JSON serialization for ArtifactDependency
+// MarshalJSON implements JSON serialization for ArtifactDependency
 func (s *ArtifactDependency) MarshalJSON() ([]byte, error) {
 	out := &dependencyJSON{
 		ID:              s.ID(),
@@ -80,7 +80,7 @@ func (s *ArtifactDependency) MarshalJSON() ([]byte, error) {
 	return json.Marshal(out)
 }
 
-//UnmarshalJSON implements JSON deserialization for ArtifactDependency
+// UnmarshalJSON implements JSON deserialization for ArtifactDependency
 func (s *ArtifactDependency) UnmarshalJSON(data []byte) error {
 	var aux dependencyJSON
 	if err := json.Unmarshal(data, &aux); err != nil {

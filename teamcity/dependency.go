@@ -8,7 +8,7 @@ import (
 	"github.com/dghubble/sling"
 )
 
-//DependencyService provides operations for managing dependencies for a buildType
+// DependencyService provides operations for managing dependencies for a buildType
 type DependencyService struct {
 	BuildTypeID   string
 	httpClient    *http.Client
@@ -19,7 +19,7 @@ type DependencyService struct {
 	snapshotHelper *restHelper
 }
 
-//NewDependencyService constructs and instance of DependencyService scoped to a given buildTypeId
+// NewDependencyService constructs and instance of DependencyService scoped to a given buildTypeId
 func NewDependencyService(buildTypeID string, c *http.Client, base *sling.Sling) *DependencyService {
 	artifactSling := base.New().Path(fmt.Sprintf("buildTypes/%s/artifact-dependencies/", buildTypeID))
 	snapshotSling := base.New().Path(fmt.Sprintf("buildTypes/%s/snapshot-dependencies/", buildTypeID))
@@ -33,7 +33,7 @@ func NewDependencyService(buildTypeID string, c *http.Client, base *sling.Sling)
 	}
 }
 
-//AddSnapshotDependency adds a new snapshot dependency to build type
+// AddSnapshotDependency adds a new snapshot dependency to build type
 func (s *DependencyService) AddSnapshotDependency(dep *SnapshotDependency) (*SnapshotDependency, error) {
 	var out SnapshotDependency
 	if dep == nil {
@@ -53,7 +53,7 @@ func (s *DependencyService) AddSnapshotDependency(dep *SnapshotDependency) (*Sna
 	return &out, nil
 }
 
-//AddArtifactDependency adds a new artifact dependency to build type
+// AddArtifactDependency adds a new artifact dependency to build type
 func (s *DependencyService) AddArtifactDependency(dep *ArtifactDependency) (*ArtifactDependency, error) {
 	var out ArtifactDependency
 	if dep == nil {
@@ -74,7 +74,7 @@ func (s *DependencyService) AddArtifactDependency(dep *ArtifactDependency) (*Art
 	return &out, nil
 }
 
-//GetSnapshotByID returns a snapshot dependency by its id
+// GetSnapshotByID returns a snapshot dependency by its id
 func (s *DependencyService) GetSnapshotByID(depID string) (*SnapshotDependency, error) {
 	var out SnapshotDependency
 	resp, err := s.snapshotSling.New().Get(depID).ReceiveSuccess(&out)
@@ -90,7 +90,7 @@ func (s *DependencyService) GetSnapshotByID(depID string) (*SnapshotDependency, 
 	return &out, nil
 }
 
-//GetArtifactByID returns an artifact dependency by its id
+// GetArtifactByID returns an artifact dependency by its id
 func (s *DependencyService) GetArtifactByID(depID string) (*ArtifactDependency, error) {
 	var out ArtifactDependency
 	err := s.artifactHelper.get(depID, &out, "artifact dependency")
@@ -102,12 +102,12 @@ func (s *DependencyService) GetArtifactByID(depID string) (*ArtifactDependency, 
 	return &out, nil
 }
 
-//DeleteSnapshot removes a snapshot dependency from the build configuration by its id
+// DeleteSnapshot removes a snapshot dependency from the build configuration by its id
 func (s *DependencyService) DeleteSnapshot(depID string) error {
 	return s.snapshotHelper.deleteByIDWithSling(s.snapshotSling, depID, "snapshot dependency")
 }
 
-//DeleteArtifact removes an artifact dependency from the build configuration by its id
+// DeleteArtifact removes an artifact dependency from the build configuration by its id
 func (s *DependencyService) DeleteArtifact(depID string) error {
 	return s.artifactHelper.deleteByIDWithSling(s.artifactSling, depID, "artifact dependency")
 }

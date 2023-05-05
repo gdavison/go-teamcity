@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"reflect"
@@ -35,7 +34,7 @@ func (r *restHelper) getCustom(path string, out interface{}, resourceDescription
 	}
 
 	defer response.Body.Close()
-	bodyBytes, err := ioutil.ReadAll(response.Body)
+	bodyBytes, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
@@ -63,7 +62,7 @@ func (r *restHelper) get(path string, out interface{}, resourceDescription strin
 		return json.NewDecoder(response.Body).Decode(out)
 	}
 
-	dt, err := ioutil.ReadAll(response.Body)
+	dt, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
@@ -78,7 +77,7 @@ func (r *restHelper) putCustom(path string, data interface{}, out interface{}, r
 	}
 	defer response.Body.Close()
 
-	bodyBytes, err := ioutil.ReadAll(response.Body)
+	bodyBytes, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
@@ -102,7 +101,7 @@ func (r *restHelper) postCustom(path string, data interface{}, out interface{}, 
 	}
 	defer response.Body.Close()
 
-	bodyBytes, err := ioutil.ReadAll(response.Body)
+	bodyBytes, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
@@ -133,7 +132,7 @@ func (r *restHelper) putTextPlain(path string, data string, resourceDescription 
 	}
 
 	defer resp.Body.Close()
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
@@ -157,7 +156,7 @@ func (r *restHelper) post(path string, data interface{}, out interface{}, resour
 	if response.StatusCode == 201 || response.StatusCode == 200 {
 		return json.NewDecoder(response.Body).Decode(out)
 	}
-	dt, err := ioutil.ReadAll(response.Body)
+	dt, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
@@ -176,7 +175,7 @@ func (r *restHelper) put(path string, data interface{}, out interface{}, resourc
 	if response.StatusCode == 201 || response.StatusCode == 200 {
 		return json.NewDecoder(response.Body).Decode(out)
 	}
-	dt, err := ioutil.ReadAll(response.Body)
+	dt, err := io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
@@ -200,7 +199,7 @@ func (r *restHelper) deleteByIDWithSling(sling *sling.Sling, resourceID string, 
 	}
 
 	if response.StatusCode != 200 && response.StatusCode != 204 {
-		dt, err := ioutil.ReadAll(response.Body)
+		dt, err := io.ReadAll(response.Body)
 		if err != nil {
 			return err
 		}
