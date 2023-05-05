@@ -16,13 +16,12 @@ func TestProject_Create(t *testing.T) {
 	newProject := getTestProjectData(testProjectId, "")
 	client := setup()
 	actual, err := client.Projects.Create(newProject)
-
 	require.NoError(t, err)
+	defer cleanUpProject(t, client, actual.ID)
+
 	require.NotNil(t, actual)
 	assert.NotEmpty(t, actual.ID)
 	assert.NotEmpty(t, actual.UUID)
-
-	cleanUpProject(t, client, actual.ID)
 
 	assert.Equal(t, newProject.Name, actual.Name)
 	assert.Equal(t, newProject.Description, actual.Description)
@@ -64,6 +63,21 @@ func TestProject_CreateWithParent(t *testing.T) {
 	require.NotNil(t, actual.ParentProject)
 	assert.Equal(testProjectId, actual.ParentProject.ID)
 	assert.Equal("ProjectTest_ChildProject", actual.ID)
+}
+
+func TestProject_Delete(t *testing.T) {
+	newProject := getTestProjectData(testProjectId, "")
+	client := setup()
+	actual, err := client.Projects.Create(newProject)
+	require.NoError(t, err)
+
+	err = client.Projects.DeleteLocator(actual.Locator())
+	require.NoError(t, err)
+
+	deletedProject, err := client.Projects.Get(actual.Locator())
+	assert.Nil(t, deletedProject)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "404")
 }
 
 func TestProject_UpdateWithSameParentDoesNotChangeName(t *testing.T) {
