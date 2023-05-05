@@ -27,7 +27,8 @@ func TestGroup_Create(t *testing.T) {
 func TestGroup_GetByKey(t *testing.T) {
 	newGroup, _ := teamcity.NewGroup("TESTGROUPKEY", "Test Group Name", "Test Group Description")
 	client := setup()
-	client.Groups.Create(newGroup)
+	_, err := client.Groups.Create(newGroup)
+	require.NoError(t, err)
 
 	actual, err := client.Groups.GetByKey(newGroup.Key)
 
@@ -45,9 +46,10 @@ func TestGroup_GetByKey(t *testing.T) {
 func TestGroup_Delete(t *testing.T) {
 	newGroup, _ := teamcity.NewGroup("TESTGROUPKEY", "Test Group Name", "Test Group Description")
 	client := setup()
-	client.Groups.Create(newGroup)
+	_, err := client.Groups.Create(newGroup)
+	require.NoError(t, err)
 
-	err := client.Groups.Delete(newGroup.Key)
+	err = client.Groups.Delete(newGroup.Key)
 
 	require.NoError(t, err)
 
@@ -59,5 +61,6 @@ func TestGroup_Delete(t *testing.T) {
 }
 
 func cleanUpGroup(t *testing.T, client *teamcity.Client, key string) {
-	client.Groups.Delete(key)
+	err := client.Groups.Delete(key)
+	require.NoError(t, err)
 }

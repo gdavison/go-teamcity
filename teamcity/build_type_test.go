@@ -98,7 +98,8 @@ func TestBuildType_Update(t *testing.T) {
 	created := createTestBuildTypeWithName(t, client, testBuildTypeProjectId, testBuildTypeId, true)
 	sut := client.BuildTypes
 
-	actual, err := sut.GetByID(created.ID) //Refresh
+	actual, err := sut.GetByID(created.ID) // Refresh
+	require.NoError(t, err)
 
 	//Update some fields
 	actual.Name = "Updated name"
@@ -147,6 +148,7 @@ func TestBuildType_UpdateParameters(t *testing.T) {
 	sut := client.BuildTypes
 
 	actual, err := sut.GetByID(created.ID) //Refresh
+	require.NoError(t, err)
 
 	//Update some fields
 	props := teamcity.NewParametersEmpty()
@@ -169,12 +171,14 @@ func TestBuildType_UpdateParametersWithRemoval(t *testing.T) {
 	sut := client.BuildTypes
 
 	actual, err := sut.GetByID(created.ID) //Refresh
+	require.NoError(t, err)
 
 	props := teamcity.NewParametersEmpty()
 	props.AddOrReplaceValue(teamcity.ParameterTypes.Configuration, "param1", "value1")
 	props.AddOrReplaceValue(teamcity.ParameterTypes.Configuration, "param2", "value2")
 	actual.Parameters = props
 	actual, err = sut.Update(actual)
+	require.NoError(t, err)
 
 	actual.Parameters.Remove(teamcity.ParameterTypes.Configuration, "param2")
 	actual, err = sut.Update(actual)
@@ -201,6 +205,8 @@ func TestBuildType_GetParametersExcludeInherited(t *testing.T) {
 
 	sut := client.BuildTypes
 	actual, err := sut.GetByID(created.ID) //Refresh
+	require.NoError(err)
+
 	props := teamcity.NewParametersEmpty()
 	props.AddOrReplaceValue(teamcity.ParameterTypes.Configuration, "param1", "value1")
 	props.AddOrReplaceValue(teamcity.ParameterTypes.Configuration, "param2", "value2")
@@ -295,22 +301,4 @@ func getTestBuildTypeData(name string, description string, projectId string, tem
 	}
 	out.Description = description
 	return
-}
-
-func cleanUpBuildType(t *testing.T, c *teamcity.Client, id string) {
-	if err := c.BuildTypes.Delete(id); err != nil {
-		t.Errorf("Unable to delete build type with id = '%s', err: %s", id, err)
-		return
-	}
-
-	deleted, err := c.BuildTypes.GetByID(id)
-
-	if deleted != nil {
-		t.Errorf("Build type not deleted during cleanup.")
-		return
-	}
-
-	if err == nil {
-		t.Errorf("Expected 404 Not Found error when getting Deleted Build Type, but no error returned.")
-	}
 }

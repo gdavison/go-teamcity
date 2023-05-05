@@ -3,7 +3,7 @@ package teamcity
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/dghubble/sling"
@@ -63,7 +63,7 @@ type BuildType struct {
 	buildTypeJSON  *buildTypeJSON
 }
 
-//NewBuildType returns a build configuration with default options
+// NewBuildType returns a build configuration with default options
 func NewBuildType(projectID string, name string) (*BuildType, error) {
 	if projectID == "" || name == "" {
 		return nil, fmt.Errorf("projectID and name are required")
@@ -84,7 +84,7 @@ func NewBuildType(projectID string, name string) (*BuildType, error) {
 	}, nil
 }
 
-//NewBuildTypeTemplate returns a build configuration template with default options
+// NewBuildTypeTemplate returns a build configuration template with default options
 func NewBuildTypeTemplate(projectID string, name string) (*BuildType, error) {
 	if projectID == "" || name == "" {
 		return nil, fmt.Errorf("projectID and name are required")
@@ -104,7 +104,7 @@ func NewBuildTypeTemplate(projectID string, name string) (*BuildType, error) {
 	}, nil
 }
 
-//MarshalJSON implements JSON serialization for BuildType
+// MarshalJSON implements JSON serialization for BuildType
 func (b *BuildType) MarshalJSON() ([]byte, error) {
 	optProps := b.Options.properties()
 
@@ -128,7 +128,7 @@ func (b *BuildType) MarshalJSON() ([]byte, error) {
 	return json.Marshal(out)
 }
 
-//UnmarshalJSON implements JSON deserialization for TriggerSchedule
+// UnmarshalJSON implements JSON deserialization for TriggerSchedule
 func (b *BuildType) UnmarshalJSON(data []byte) error {
 	var aux buildTypeJSON
 	if err := json.Unmarshal(data, &aux); err != nil {
@@ -165,7 +165,10 @@ func (b *BuildType) read(dt *buildTypeJSON) error {
 		if err != nil {
 			return err
 		}
-		stepReadingFunc(dt, &steps[i])
+		err = stepReadingFunc(dt, &steps[i])
+		if err != nil {
+			return err
+		}
 	}
 	b.Steps = steps
 
@@ -223,7 +226,7 @@ func newBuildTypeService(base *sling.Sling, httpClient *http.Client) *BuildTypeS
 	return &BuildTypeService{
 		httpClient: httpClient,
 		sling:      sling,
-		restHelper: newRestHelperWithSling(httpClient, sling),
+		restHelper: newRestHelper(httpClient, sling),
 	}
 }
 
@@ -260,9 +263,9 @@ func (s *BuildTypeService) GetByID(id string) (*BuildType, error) {
 	return &out, err
 }
 
-//Update changes the resource in-place for this build configuration.
-//TeamCity API does not support "PUT" on the whole Build Configuration resource, so the only updateable fields are "Name" and "Description". Other field updates will be ignored.
-//This method also updates Settings and Parameters, but this is not an atomic operation. If an error occurs, it will be returned to caller what was updated or not.
+// Update changes the resource in-place for this build configuration.
+// TeamCity API does not support "PUT" on the whole Build Configuration resource, so the only updateable fields are "Name" and "Description". Other field updates will be ignored.
+// This method also updates Settings and Parameters, but this is not an atomic operation. If an error occurs, it will be returned to caller what was updated or not.
 func (s *BuildTypeService) Update(buildType *BuildType) (*BuildType, error) {
 	_, err := s.restHelper.putTextPlain(buildType.ID+"/name", buildType.Name, "build type name")
 	if err != nil {
@@ -305,7 +308,7 @@ func (s *BuildTypeService) Update(buildType *BuildType) (*BuildType, error) {
 	return out, nil
 }
 
-//Delete a build type resource
+// Delete a build type resource
 func (s *BuildTypeService) Delete(id string) error {
 	request, _ := s.sling.New().Delete(id).Request()
 	response, err := s.httpClient.Do(request)
@@ -319,7 +322,7 @@ func (s *BuildTypeService) Delete(id string) error {
 	}
 
 	if response.StatusCode != 200 && response.StatusCode != 204 {
-		respData, err := ioutil.ReadAll(response.Body)
+		respData, err := io.ReadAll(response.Body)
 		if err != nil {
 			return err
 		}
@@ -360,7 +363,7 @@ func (s *BuildTypeService) AddStep(id string, step Step) (Step, error) {
 	return created, nil
 }
 
-//GetSteps return the list of steps for a Build configuration with given id.
+// GetSteps return the list of steps for a Build configuration with given id.
 func (s *BuildTypeService) GetSteps(id string) ([]Step, error) {
 	var aux stepsJSON
 	path := fmt.Sprintf("%s/steps/", LocatorID(id))
@@ -374,7 +377,10 @@ func (s *BuildTypeService) GetSteps(id string) ([]Step, error) {
 		if err != nil {
 			return nil, err
 		}
-		stepReadingFunc(dt, &steps[i])
+		err = stepReadingFunc(dt, &steps[i])
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return steps, nil
@@ -386,6 +392,9 @@ func (s *BuildTypeService) UpdateSettings(id string, settings *Properties) error
 	for _, item := range settings.Items {
 		bodyProvider := textPlainBodyProvider{payload: item.Value}
 		req, err := s.sling.New().Put(fmt.Sprintf("%s/settings/%s", LocatorID(id), item.Name)).BodyProvider(bodyProvider).Add("Accept", "text/plain").Request()
+		if err != nil {
+			return err
+		}
 		response, err := s.httpClient.Do(req)
 		response.Body.Close()
 		if err != nil {
@@ -396,7 +405,7 @@ func (s *BuildTypeService) UpdateSettings(id string, settings *Properties) error
 	return nil
 }
 
-//DeleteStep removes a build step from this build type by its id
+// DeleteStep removes a build step from this build type by its id
 func (s *BuildTypeService) DeleteStep(id string, stepID string) error {
 	_, err := s.sling.New().Delete(fmt.Sprintf("%s/steps/%s", LocatorID(id), stepID)).ReceiveSuccess(nil)
 

@@ -1,6 +1,6 @@
 package teamcity
 
-//Dependency is an interface representing a Build dependency, for creating build chains
+// Dependency is an interface representing a Build dependency, for creating build chains
 type Dependency interface {
 	ID() string
 	Type() string

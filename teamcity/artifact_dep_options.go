@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//ArtifactDependencyRevision has some allowed values listed per constants.
+// ArtifactDependencyRevision has some allowed values listed per constants.
 type ArtifactDependencyRevision string
 
 const (
@@ -29,8 +29,8 @@ const (
 	LastBuildFinishedWithTag ArtifactDependencyRevision = "buildTag"
 )
 
-//ArtifactDependencyOptions represents options when creating an artifact dependency for a build configuration.
-//For more information see: https://confluence.jetbrains.com/display/TCD10/Artifact+Dependencies
+// ArtifactDependencyOptions represents options when creating an artifact dependency for a build configuration.
+// For more information see: https://confluence.jetbrains.com/display/TCD10/Artifact+Dependencies
 type ArtifactDependencyOptions struct {
 	//ArtifactRevisionType maps to the TeamCity UI's "Get artifacts from", indicating which build should be used as artifact source.
 	ArtifactRevisionType ArtifactDependencyRevision `prop:"revisionName"`
@@ -45,14 +45,14 @@ type ArtifactDependencyOptions struct {
 	RevisionNumber string
 }
 
-//NewArtifactDependencyOptions creates an instance of ArtifactDependencyOptions with default values.
+// NewArtifactDependencyOptions creates an instance of ArtifactDependencyOptions with default values.
 //
-//(required) pathRules - list of rules to match files that will have to be dowloaded from the source build that output artifacts.
-//They can be specified in the format [+:|-:]SourcePath[!ArchivePath][=>DestinationPath]
+// (required) pathRules - list of rules to match files that will have to be dowloaded from the source build that output artifacts.
+// They can be specified in the format [+:|-:]SourcePath[!ArchivePath][=>DestinationPath]
 //
-//(required) revisionType - Which kind of revision type the artifact dependency will be based upon. See ArtifactDependencyRevision enum for options.
+// (required) revisionType - Which kind of revision type the artifact dependency will be based upon. See ArtifactDependencyRevision enum for options.
 //
-//(optional) revisionValue - Required if using `BuildWithSpecifiedNumber` or `LastBuildFinishedWithTag`
+// (optional) revisionValue - Required if using `BuildWithSpecifiedNumber` or `LastBuildFinishedWithTag`
 func NewArtifactDependencyOptions(pathRules []string, revisionType ArtifactDependencyRevision, cleanDestination bool, revisionValue string) (*ArtifactDependencyOptions, error) {
 	if len(pathRules) == 0 {
 		return nil, errors.New("pathRules is required")
@@ -87,7 +87,6 @@ func (o *ArtifactDependencyOptions) properties() *Properties {
 	switch o.ArtifactRevisionType {
 	case BuildWithSpecifiedNumber:
 		p.AddOrReplaceValue("revisionValue", o.RevisionNumber)
-		break
 	case LastBuildFinishedWithTag:
 		p.AddOrReplaceValue("revisionValue", o.RevisionNumber+".tcbuildtag")
 	default:

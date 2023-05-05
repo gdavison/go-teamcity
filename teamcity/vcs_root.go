@@ -3,13 +3,13 @@ package teamcity
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/dghubble/sling"
 )
 
-//VcsRoot interface represents a base type of VCSRoot
+// VcsRoot interface represents a base type of VCSRoot
 type VcsRoot interface {
 	//GetID returns the ID of this VCS Root
 	GetID() string
@@ -93,7 +93,7 @@ func newVcsRootService(base *sling.Sling, httpClient *http.Client) *VcsRootServi
 	return &VcsRootService{
 		sling:      sling,
 		httpClient: httpClient,
-		restHelper: newRestHelperWithSling(httpClient, sling),
+		restHelper: newRestHelper(httpClient, sling),
 	}
 }
 
@@ -110,9 +110,9 @@ func (s *VcsRootService) Create(projectID string, vcsRoot VcsRoot) (*VcsRootRefe
 	return &created, nil
 }
 
-//Update changes the resource in-place for a VCS Root.
-//TeamCity API does not support "PUT" on the whole VCS Root resource. Updateable fields are "name", "project" and "modificationCheckInterval".
-//This method also updates Settings and Parameters, but this is not an atomic operation. If an error occurs, it will be returned to caller what was updated or not.
+// Update changes the resource in-place for a VCS Root.
+// TeamCity API does not support "PUT" on the whole VCS Root resource. Updateable fields are "name", "project" and "modificationCheckInterval".
+// This method also updates Settings and Parameters, but this is not an atomic operation. If an error occurs, it will be returned to caller what was updated or not.
 func (s *VcsRootService) Update(vcsRoot VcsRoot) (VcsRoot, error) {
 	var props Properties
 
@@ -181,7 +181,7 @@ func (s *VcsRootService) GetByID(id string) (VcsRoot, error) {
 	return s.readVcsRootResponse(resp)
 }
 
-//Delete a VCS Root resource using id: locator
+// Delete a VCS Root resource using id: locator
 func (s *VcsRootService) Delete(id string) error {
 	request, _ := s.sling.New().Delete(id).Request()
 
@@ -197,7 +197,7 @@ func (s *VcsRootService) Delete(id string) error {
 	}
 
 	if response.StatusCode != 200 && response.StatusCode != 204 {
-		respData, err := ioutil.ReadAll(response.Body)
+		respData, err := io.ReadAll(response.Body)
 		if err != nil {
 			return err
 		}
@@ -208,7 +208,7 @@ func (s *VcsRootService) Delete(id string) error {
 }
 
 func (s *VcsRootService) readVcsRootResponse(resp *http.Response) (VcsRoot, error) {
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

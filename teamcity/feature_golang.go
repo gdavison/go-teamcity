@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 )
 
-//FeatureCommitStatusPublisher represents a golang build feature. Implements BuildFeature interface
+// FeatureCommitStatusPublisher represents a golang build feature. Implements BuildFeature interface
 type FeatureGolangPublisher struct {
 	id          string
 	disabled    bool
@@ -20,47 +20,47 @@ func NewFeatureGolang() *FeatureGolangPublisher {
 	}
 }
 
-//ID returns the ID for this instance.
+// ID returns the ID for this instance.
 func (f *FeatureGolangPublisher) ID() string {
 	return f.id
 }
 
-//SetID sets the ID for this instance.
+// SetID sets the ID for this instance.
 func (f *FeatureGolangPublisher) SetID(value string) {
 	f.id = value
 }
 
-//Type returns the "commit-status-publisher", the keyed-type for this build feature instance
+// Type returns the "commit-status-publisher", the keyed-type for this build feature instance
 func (f *FeatureGolangPublisher) Type() string {
 	return "golang"
 }
 
-//Disabled returns whether this build feature is disabled or not.
+// Disabled returns whether this build feature is disabled or not.
 func (f *FeatureGolangPublisher) Disabled() bool {
 	return f.disabled
 }
 
-//SetDisabled sets whether this build feature is disabled or not.
+// SetDisabled sets whether this build feature is disabled or not.
 func (f *FeatureGolangPublisher) SetDisabled(value bool) {
 	f.disabled = value
 }
 
-//BuildTypeID is a getter for the Build Type ID associated with this build feature.
+// BuildTypeID is a getter for the Build Type ID associated with this build feature.
 func (f *FeatureGolangPublisher) BuildTypeID() string {
 	return f.buildTypeID
 }
 
-//SetBuildTypeID is a setter for the Build Type ID associated with this build feature.
+// SetBuildTypeID is a setter for the Build Type ID associated with this build feature.
 func (f *FeatureGolangPublisher) SetBuildTypeID(value string) {
 	f.buildTypeID = value
 }
 
-//Properties returns a *Properties instance representing a serializable collection to be used.
+// Properties returns a *Properties instance representing a serializable collection to be used.
 func (f *FeatureGolangPublisher) Properties() *Properties {
 	return f.properties
 }
 
-//MarshalJSON implements JSON serialization for FeatureCommitStatusPublisher
+// MarshalJSON implements JSON serialization for FeatureCommitStatusPublisher
 func (f *FeatureGolangPublisher) MarshalJSON() ([]byte, error) {
 	out := &buildFeatureJSON{
 		ID:         f.id,
@@ -75,7 +75,7 @@ func (f *FeatureGolangPublisher) MarshalJSON() ([]byte, error) {
 	return json.Marshal(out)
 }
 
-//UnmarshalJSON implements JSON deserialization for FeatureCommitStatusPublisher
+// UnmarshalJSON implements JSON deserialization for FeatureCommitStatusPublisher
 func (f *FeatureGolangPublisher) UnmarshalJSON(data []byte) error {
 	var aux buildFeatureJSON
 	if err := json.Unmarshal(data, &aux); err != nil {

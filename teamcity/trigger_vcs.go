@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//TriggerVcs represents a build trigger on VCS changes
+// TriggerVcs represents a build trigger on VCS changes
 type TriggerVcs struct {
 	triggerJSON  *triggerJSON
 	buildTypeID  string
@@ -15,32 +15,32 @@ type TriggerVcs struct {
 	Options      *TriggerVcsOptions
 }
 
-//ID for this entity
+// ID for this entity
 func (t *TriggerVcs) ID() string {
 	return t.triggerJSON.ID
 }
 
-//Type returns TriggerTypes.Vcs ("vcsTrigger")
+// Type returns TriggerTypes.Vcs ("vcsTrigger")
 func (t *TriggerVcs) Type() string {
 	return TriggerTypes.Vcs
 }
 
-//SetDisabled controls whether this trigger is disabled or not
+// SetDisabled controls whether this trigger is disabled or not
 func (t *TriggerVcs) SetDisabled(disabled bool) {
 	t.triggerJSON.Disabled = NewBool(disabled)
 }
 
-//Disabled gets the disabled status for this trigger
+// Disabled gets the disabled status for this trigger
 func (t *TriggerVcs) Disabled() bool {
 	return *t.triggerJSON.Disabled
 }
 
-//BuildTypeID gets the build type identifier
+// BuildTypeID gets the build type identifier
 func (t *TriggerVcs) BuildTypeID() string {
 	return t.buildTypeID
 }
 
-//SetBuildTypeID sets the build type identifier
+// SetBuildTypeID sets the build type identifier
 func (t *TriggerVcs) SetBuildTypeID(id string) {
 	t.buildTypeID = id
 }
@@ -89,7 +89,7 @@ func (t *TriggerVcs) properties() *Properties {
 	return props
 }
 
-//MarshalJSON implements JSON serialization for TriggerVcs
+// MarshalJSON implements JSON serialization for TriggerVcs
 func (t *TriggerVcs) MarshalJSON() ([]byte, error) {
 	out := &triggerJSON{
 		ID:         t.ID(),
@@ -101,7 +101,7 @@ func (t *TriggerVcs) MarshalJSON() ([]byte, error) {
 	return json.Marshal(out)
 }
 
-//UnmarshalJSON implements JSON deserialization for TriggerVcs
+// UnmarshalJSON implements JSON deserialization for TriggerVcs
 func (t *TriggerVcs) UnmarshalJSON(data []byte) error {
 	var aux triggerJSON
 	if err := json.Unmarshal(data, &aux); err != nil {

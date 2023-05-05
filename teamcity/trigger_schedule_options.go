@@ -1,6 +1,6 @@
 package teamcity
 
-//TriggerScheduleOptions represent options for configuring a scheduled build trigger
+// TriggerScheduleOptions represent options for configuring a scheduled build trigger
 type TriggerScheduleOptions struct {
 	QueueOptimization                   bool                       `prop:"enableQueueOptimization" force:""`
 	PromoteWatchedBuild                 bool                       `prop:"promoteWatchedBuild" force:""`
@@ -14,7 +14,7 @@ type TriggerScheduleOptions struct {
 	EnforceCleanCheckoutForDependencies bool                       `prop:"enforceCleanCheckoutForDependencies"`
 }
 
-//NewTriggerScheduleOptions returns a TriggerScheduleOptions with default values
+// NewTriggerScheduleOptions returns a TriggerScheduleOptions with default values
 func NewTriggerScheduleOptions() *TriggerScheduleOptions {
 	return &TriggerScheduleOptions{
 		QueueOptimization:           true,

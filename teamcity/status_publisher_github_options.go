@@ -16,7 +16,7 @@ type StatusPublisherGithubOptions struct {
 	AccessToken string
 }
 
-//NewCommitStatusPublisherGithubOptionsPassword returns options created for AuthenticationType = 'password'. No validation is performed, parameters indicate mandatory fields.
+// NewCommitStatusPublisherGithubOptionsPassword returns options created for AuthenticationType = 'password'. No validation is performed, parameters indicate mandatory fields.
 func NewCommitStatusPublisherGithubOptionsPassword(host string, username string, password string) StatusPublisherGithubOptions {
 	return StatusPublisherGithubOptions{
 		Host:               host,
@@ -26,7 +26,7 @@ func NewCommitStatusPublisherGithubOptionsPassword(host string, username string,
 	}
 }
 
-//NewCommitStatusPublisherGithubOptionsToken returns options created for AuthenticationType = 'token'. No validation is performed, parameters indicate mandatory fields.
+// NewCommitStatusPublisherGithubOptionsToken returns options created for AuthenticationType = 'token'. No validation is performed, parameters indicate mandatory fields.
 func NewCommitStatusPublisherGithubOptionsToken(host string, accessToken string) StatusPublisherGithubOptions {
 	return StatusPublisherGithubOptions{
 		Host:               host,
@@ -35,8 +35,8 @@ func NewCommitStatusPublisherGithubOptionsToken(host string, accessToken string)
 	}
 }
 
-//NewFeatureCommitStatusPublisherGithub creates a Build Feature Commit status Publisher to Github with the given options and validates the required properties.
-//VcsRootID is optional - if empty, it will apply the commit publisher feature to all VCS roots.
+// NewFeatureCommitStatusPublisherGithub creates a Build Feature Commit status Publisher to Github with the given options and validates the required properties.
+// VcsRootID is optional - if empty, it will apply the commit publisher feature to all VCS roots.
 func NewFeatureCommitStatusPublisherGithub(opt StatusPublisherGithubOptions, vcsRootID string) (*FeatureCommitStatusPublisher, error) {
 	if opt.AuthenticationType == "" {
 		return nil, fmt.Errorf("AuthenticationType is required")
@@ -74,7 +74,7 @@ func NewFeatureCommitStatusPublisherGithub(opt StatusPublisherGithubOptions, vcs
 	return out, nil
 }
 
-//Properties returns a *Properties collection with properties filled related to this commit publisher parameters to be used in build features
+// Properties returns a *Properties collection with properties filled related to this commit publisher parameters to be used in build features
 func (s StatusPublisherGithubOptions) Properties() *Properties {
 	props := NewPropertiesEmpty()
 
@@ -94,7 +94,7 @@ func (s StatusPublisherGithubOptions) Properties() *Properties {
 	return props
 }
 
-//CommitStatusPublisherGithubOptionsFromProperties grabs a Properties collection and transforms back to a StatusPublisherGithubOptions
+// CommitStatusPublisherGithubOptionsFromProperties grabs a Properties collection and transforms back to a StatusPublisherGithubOptions
 func CommitStatusPublisherGithubOptionsFromProperties(p *Properties) (*StatusPublisherGithubOptions, error) {
 	var out StatusPublisherGithubOptions
 	if host, ok := p.GetOk("github_host"); ok {

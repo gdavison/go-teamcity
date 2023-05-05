@@ -11,7 +11,6 @@ type StepOctopusPushPackage struct {
 	ID       string
 	Name     string
 	stepType string
-	stepJSON *stepJSON
 
 	// Specify Octopus web portal URL.
 	Host string
@@ -73,7 +72,7 @@ func (s *StepOctopusPushPackage) serializable() *stepJSON {
 	}
 }
 
-//MarshalJSON implements JSON serialization for StepOctopusPushPackage
+// MarshalJSON implements JSON serialization for StepOctopusPushPackage
 func (s *StepOctopusPushPackage) MarshalJSON() ([]byte, error) {
 	out := s.serializable()
 	return json.Marshal(out)

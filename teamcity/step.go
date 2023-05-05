@@ -19,7 +19,7 @@ const (
 	StepTypeOctopusCreateRelease BuildStepType = "octopus.create.release"
 )
 
-//StepExecuteMode represents how a build configuration step will execute regarding others.
+// StepExecuteMode represents how a build configuration step will execute regarding others.
 type StepExecuteMode = string
 
 const (

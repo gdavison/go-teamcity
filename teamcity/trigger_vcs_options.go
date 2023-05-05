@@ -30,8 +30,8 @@ type TriggerVcsOptions struct {
 // NewTriggerVcsOptions initialize a TriggerVcsOptions instance with same defaults as TeamCity UI
 //
 // Defaults:
-//	- GroupCheckins = false
-//	- EnableQueueOptimization = false
+//   - GroupCheckins = false
+//   - EnableQueueOptimization = false
 func NewTriggerVcsOptions(mode VcsTriggerQuietPeriodMode, seconds int) (*TriggerVcsOptions, error) {
 	quietPeriodInSeconds := 0
 	if mode == QuietPeriodCustom {
@@ -50,12 +50,12 @@ func NewTriggerVcsOptions(mode VcsTriggerQuietPeriodMode, seconds int) (*Trigger
 	}, nil
 }
 
-//QueueOptimization gets the value of enableQueueOptimization property
+// QueueOptimization gets the value of enableQueueOptimization property
 func (o *TriggerVcsOptions) QueueOptimization() bool {
 	return o.enableQueueOptimization
 }
 
-//SetQueueOptimization toggles allowing the server to replace an already started build or a more recently queued one if new changes are detected. If set to true, PerCheckinTriggering will be disabled.
+// SetQueueOptimization toggles allowing the server to replace an already started build or a more recently queued one if new changes are detected. If set to true, PerCheckinTriggering will be disabled.
 func (o *TriggerVcsOptions) SetQueueOptimization(enable bool) {
 	o.enableQueueOptimization = enable
 	if enable {
@@ -63,7 +63,7 @@ func (o *TriggerVcsOptions) SetQueueOptimization(enable bool) {
 	}
 }
 
-//PerCheckinTriggering gets the value of perCheckinTriggering property
+// PerCheckinTriggering gets the value of perCheckinTriggering property
 func (o *TriggerVcsOptions) PerCheckinTriggering() bool {
 	return o.perCheckinTriggering
 }
