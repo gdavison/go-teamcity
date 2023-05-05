@@ -152,7 +152,7 @@ func (s *BuildFeatureService) readBuildFeatureResponse(resp *http.Response) (Bui
 		}
 	case "golang":
 		{
-			var csp FeatureGolangPublisher
+			var csp FeatureGolang
 			if err := csp.UnmarshalJSON(bodyBytes); err != nil {
 				return nil, err
 			}

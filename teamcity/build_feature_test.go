@@ -15,7 +15,7 @@ type SuiteBuildFeature struct {
 	VcsRootID        string
 
 	Github *teamcity.FeatureCommitStatusPublisher
-	Golang *teamcity.FeatureGolangPublisher
+	Golang *teamcity.FeatureGolang
 }
 
 func NewSuiteBuildFeature(t *testing.T) *SuiteBuildFeature {
@@ -80,9 +80,9 @@ func (suite *SuiteBuildFeature) TestGolang_Create() {
 	actual, err := sut.Create(suite.Golang)
 	suite.Require().NoError(err)
 
-	suite.Require().IsType(new(teamcity.FeatureGolangPublisher), actual)
+	suite.Require().IsType(new(teamcity.FeatureGolang), actual)
 
-	csp := actual.(*teamcity.FeatureGolangPublisher)
+	csp := actual.(*teamcity.FeatureGolang)
 
 	suite.NotEqual("", csp.ID())
 	suite.Equal(suite.BuildTypeID, csp.BuildTypeID())
@@ -97,9 +97,9 @@ func (suite *SuiteBuildFeature) TestGolang_Get() {
 
 	actual, err = sut.GetByID(actual.ID())
 	suite.Require().NoError(err)
-	suite.Require().IsType(new(teamcity.FeatureGolangPublisher), actual)
+	suite.Require().IsType(new(teamcity.FeatureGolang), actual)
 
-	csp := actual.(*teamcity.FeatureGolangPublisher)
+	csp := actual.(*teamcity.FeatureGolang)
 
 	suite.NotEqual("", csp.ID())
 	suite.Equal(suite.BuildTypeID, csp.BuildTypeID())

@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 )
 
-// FeatureGolangPublisher represents a golang build feature. Implements BuildFeature interface
-type FeatureGolangPublisher struct {
+// FeatureGolang represents a golang build feature. Implements BuildFeature interface
+type FeatureGolang struct {
 	id          string
 	disabled    bool
 	buildTypeID string
@@ -13,55 +13,55 @@ type FeatureGolangPublisher struct {
 	properties *Properties
 }
 
-// NewFeatureGolang returns a new instance of the FeatureGolangPublisher struct
-func NewFeatureGolang() *FeatureGolangPublisher {
-	return &FeatureGolangPublisher{
+// NewFeatureGolang returns a new instance of the FeatureGolang struct
+func NewFeatureGolang() *FeatureGolang {
+	return &FeatureGolang{
 		properties: NewProperties(),
 	}
 }
 
 // ID returns the ID for this instance.
-func (f *FeatureGolangPublisher) ID() string {
+func (f *FeatureGolang) ID() string {
 	return f.id
 }
 
 // SetID sets the ID for this instance.
-func (f *FeatureGolangPublisher) SetID(value string) {
+func (f *FeatureGolang) SetID(value string) {
 	f.id = value
 }
 
 // Type returns the "golang", the keyed-type for this build feature instance
-func (f *FeatureGolangPublisher) Type() string {
+func (f *FeatureGolang) Type() string {
 	return "golang"
 }
 
 // Disabled returns whether this build feature is disabled or not.
-func (f *FeatureGolangPublisher) Disabled() bool {
+func (f *FeatureGolang) Disabled() bool {
 	return f.disabled
 }
 
 // SetDisabled sets whether this build feature is disabled or not.
-func (f *FeatureGolangPublisher) SetDisabled(value bool) {
+func (f *FeatureGolang) SetDisabled(value bool) {
 	f.disabled = value
 }
 
 // BuildTypeID is a getter for the Build Type ID associated with this build feature.
-func (f *FeatureGolangPublisher) BuildTypeID() string {
+func (f *FeatureGolang) BuildTypeID() string {
 	return f.buildTypeID
 }
 
 // SetBuildTypeID is a setter for the Build Type ID associated with this build feature.
-func (f *FeatureGolangPublisher) SetBuildTypeID(value string) {
+func (f *FeatureGolang) SetBuildTypeID(value string) {
 	f.buildTypeID = value
 }
 
 // Properties returns a *Properties instance representing a serializable collection to be used.
-func (f *FeatureGolangPublisher) Properties() *Properties {
+func (f *FeatureGolang) Properties() *Properties {
 	return f.properties
 }
 
-// MarshalJSON implements JSON serialization for FeatureGolangPublisher
-func (f *FeatureGolangPublisher) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements JSON serialization for FeatureGolang
+func (f *FeatureGolang) MarshalJSON() ([]byte, error) {
 	out := &buildFeatureJSON{
 		ID:         f.id,
 		Disabled:   NewBool(f.disabled),
@@ -75,8 +75,8 @@ func (f *FeatureGolangPublisher) MarshalJSON() ([]byte, error) {
 	return json.Marshal(out)
 }
 
-// UnmarshalJSON implements JSON deserialization for FeatureGolangPublisher
-func (f *FeatureGolangPublisher) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON implements JSON deserialization for FeatureGolang
+func (f *FeatureGolang) UnmarshalJSON(data []byte) error {
 	var aux buildFeatureJSON
 	if err := json.Unmarshal(data, &aux); err != nil {
 		return err

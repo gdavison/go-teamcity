@@ -37,7 +37,7 @@ func TestFeatureGolang_Lifecycle(t *testing.T) {
 
 func TestFeatureGolang_UnmarshallProperties(t *testing.T) {
 	assert := assert.New(t)
-	var actual teamcity.FeatureGolangPublisher
+	var actual teamcity.FeatureGolang
 	const json = `
 	{
 		"id": "BUILD_EXT_1",
