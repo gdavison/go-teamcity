@@ -16,13 +16,30 @@ func TestProject_Create(t *testing.T) {
 	newProject := getTestProjectData(testProjectId, "")
 	client := setup()
 	actual, err := client.Projects.Create(newProject)
+	require.NoError(t, err)
+	defer cleanUpProject(t, client, actual.ID)
+
+	require.NotNil(t, actual)
+	assert.NotEmpty(t, actual.ID)
+	assert.NotEmpty(t, actual.UUID)
+
+	assert.Equal(t, newProject.Name, actual.Name)
+	assert.Equal(t, newProject.Description, actual.Description)
+}
+
+func TestProject_CreateWithID(t *testing.T) {
+	newProject := getTestProjectData(testProjectId, "")
+	newProject.ID = "CustomID"
+
+	client := setup()
+	actual, err := client.Projects.Create(newProject)
 
 	require.NoError(t, err)
 	require.NotNil(t, actual)
-	assert.NotEmpty(t, actual.ID)
 
 	cleanUpProject(t, client, actual.ID)
 
+	assert.Equal(t, newProject.ID, actual.ID)
 	assert.Equal(t, newProject.Name, actual.Name)
 	assert.Equal(t, newProject.Description, actual.Description)
 }
@@ -46,6 +63,21 @@ func TestProject_CreateWithParent(t *testing.T) {
 	require.NotNil(t, actual.ParentProject)
 	assert.Equal(testProjectId, actual.ParentProject.ID)
 	assert.Equal("ProjectTest_ChildProject", actual.ID)
+}
+
+func TestProject_Delete(t *testing.T) {
+	newProject := getTestProjectData(testProjectId, "")
+	client := setup()
+	actual, err := client.Projects.Create(newProject)
+	require.NoError(t, err)
+
+	err = client.Projects.DeleteLocator(actual.Locator())
+	require.NoError(t, err)
+
+	deletedProject, err := client.Projects.Get(actual.Locator())
+	assert.Nil(t, deletedProject)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "404")
 }
 
 func TestProject_UpdateWithSameParentDoesNotChangeName(t *testing.T) {
@@ -101,6 +133,25 @@ func TestProject_UpdateDescription(t *testing.T) {
 
 	actual, _ = client.Projects.GetByID(created.ID)
 	assert.Equal(t, "Updated Description", actual.Description)
+}
+
+func TestProject_UpdateID(t *testing.T) {
+	projectName := fmt.Sprintf("Project %d", time.Now().Unix())
+	project, _ := teamcity.NewProject(projectName, "", "")
+
+	client := setup()
+
+	created, err := client.Projects.Create(project)
+	require.NoError(t, err)
+	defer cleanUpProject(t, client, created.ID)
+
+	actual, _ := client.Projects.GetByID(created.ID)
+	actual.ID = "Updated_Id"
+	_, err = client.Projects.Update(actual)
+	require.NoError(t, err)
+
+	actual, _ = client.Projects.GetByUUID(created.UUID)
+	assert.Equal(t, "Updated_Id", actual.ID)
 }
 
 func TestProject_UpdateParent(t *testing.T) {

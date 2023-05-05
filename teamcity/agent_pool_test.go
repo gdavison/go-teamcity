@@ -91,6 +91,8 @@ func TestAgentPools_ListForProject(t *testing.T) {
 	firstProjectData := getTestProjectData(fmt.Sprintf("Project %d", time.Now().Unix()), "")
 	firstProject, err := client.Projects.Create(firstProjectData)
 	assert.NoError(err)
+	firstProjectLocator := firstProject.Locator()
+	defer func() { assert.NoError(client.Projects.DeleteLocator(firstProjectLocator)) }()
 
 	agentPool := teamcity.CreateAgentPool{
 		Name: fmt.Sprintf("test-%d", time.Now().Unix()),
@@ -99,6 +101,7 @@ func TestAgentPools_ListForProject(t *testing.T) {
 	assert.NoError(err)
 	assert.NotEmpty(createdPool.Id)
 	assert.Equal(agentPool.Name, createdPool.Name)
+	defer func() { assert.NoError(client.AgentPools.Delete(createdPool.Id)) }()
 
 	retrievedPool, err := client.AgentPools.GetByID(createdPool.Id)
 	assert.NoError(err)
@@ -127,9 +130,6 @@ func TestAgentPools_ListForProject(t *testing.T) {
 	assert.NoError(err)
 	assert.Equal(1, assignments.Count)
 	assert.Equal("Default", assignments.AgentPools[0].Name)
-
-	assert.NoError(client.Projects.Delete(firstProject.ID))
-	assert.NoError(client.AgentPools.Delete(createdPool.Id))
 }
 
 func TestAgentPools_ProjectAssignment(t *testing.T) {
@@ -141,8 +141,12 @@ func TestAgentPools_ProjectAssignment(t *testing.T) {
 
 	firstProject, err := client.Projects.Create(firstProjectData)
 	assert.NoError(err)
+	firstProjectLocator := firstProject.Locator()
+	defer func() { assert.NoError(client.Projects.DeleteLocator(firstProjectLocator)) }()
 	secondProject, err := client.Projects.Create(secondProjectData)
 	assert.NoError(err)
+	secondProjectLocator := secondProject.Locator()
+	defer func() { assert.NoError(client.Projects.DeleteLocator(secondProjectLocator)) }()
 
 	agentPool := teamcity.CreateAgentPool{
 		Name: fmt.Sprintf("test-%d", time.Now().Unix()),
@@ -151,6 +155,7 @@ func TestAgentPools_ProjectAssignment(t *testing.T) {
 	assert.NoError(err)
 	assert.NotEmpty(createdPool.Id)
 	assert.Equal(agentPool.Name, createdPool.Name)
+	defer func() { assert.NoError(client.AgentPools.Delete(createdPool.Id)) }()
 
 	retrievedPool, err := client.AgentPools.GetByID(createdPool.Id)
 	assert.NoError(err)
@@ -181,10 +186,6 @@ func TestAgentPools_ProjectAssignment(t *testing.T) {
 	assert.NoError(client.AgentPools.UnassignProject(createdPool.Id, secondProject.ID))
 	assert.False(validateContainsProject(assert, client, createdPool.Id, firstProject.ID))
 	assert.False(validateContainsProject(assert, client, createdPool.Id, secondProject.ID))
-
-	assert.NoError(client.Projects.Delete(firstProject.ID))
-	assert.NoError(client.Projects.Delete(secondProject.ID))
-	assert.NoError(client.AgentPools.Delete(createdPool.Id))
 }
 
 func validateContainsProject(assert *assert.Assertions, client *teamcity.Client, poolId int, projectId string) bool {
