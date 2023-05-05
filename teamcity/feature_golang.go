@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 )
 
-// FeatureCommitStatusPublisher represents a golang build feature. Implements BuildFeature interface
+// FeatureGolangPublisher represents a golang build feature. Implements BuildFeature interface
 type FeatureGolangPublisher struct {
 	id          string
 	disabled    bool
@@ -30,7 +30,7 @@ func (f *FeatureGolangPublisher) SetID(value string) {
 	f.id = value
 }
 
-// Type returns the "commit-status-publisher", the keyed-type for this build feature instance
+// Type returns the "golang", the keyed-type for this build feature instance
 func (f *FeatureGolangPublisher) Type() string {
 	return "golang"
 }
@@ -60,7 +60,7 @@ func (f *FeatureGolangPublisher) Properties() *Properties {
 	return f.properties
 }
 
-// MarshalJSON implements JSON serialization for FeatureCommitStatusPublisher
+// MarshalJSON implements JSON serialization for FeatureGolangPublisher
 func (f *FeatureGolangPublisher) MarshalJSON() ([]byte, error) {
 	out := &buildFeatureJSON{
 		ID:         f.id,
@@ -75,7 +75,7 @@ func (f *FeatureGolangPublisher) MarshalJSON() ([]byte, error) {
 	return json.Marshal(out)
 }
 
-// UnmarshalJSON implements JSON deserialization for FeatureCommitStatusPublisher
+// UnmarshalJSON implements JSON deserialization for FeatureGolangPublisher
 func (f *FeatureGolangPublisher) UnmarshalJSON(data []byte) error {
 	var aux buildFeatureJSON
 	if err := json.Unmarshal(data, &aux); err != nil {
