@@ -69,7 +69,7 @@ func (s *ProjectFeatureService) Create(feature ProjectFeature) (ProjectFeature, 
 	return s.parseProjectFeatureJSONResponse(*createdProjectFeature)
 }
 
-// Delete removes a single ProjectFeature for the current project by it's id.
+// Delete removes a single ProjectFeature for the current project by its id.
 func (s *ProjectFeatureService) Delete(id string) error {
 	url := fmt.Sprintf("projects/%s/projectFeatures/%s", s.ProjectID, id)
 	if err := s.restHelper.delete(url, "projectFeature"); err != nil {
@@ -101,7 +101,7 @@ func (s *ProjectFeatureService) Get() ([]ProjectFeature, error) {
 	return result, nil
 }
 
-// GetByID returns a single ProjectFeature for the current project by it's id.
+// GetByID returns a single ProjectFeature for the current project by its id.
 func (s *ProjectFeatureService) GetByID(id string) (ProjectFeature, error) {
 	var out projectFeatureJSON
 
@@ -114,7 +114,7 @@ func (s *ProjectFeatureService) GetByID(id string) (ProjectFeature, error) {
 	return s.parseProjectFeatureJSONResponse(out)
 }
 
-// GetByType returns a single ProjectFeature for the current project by it's typw.
+// GetByType returns a single ProjectFeature for the current project by its type.
 func (s *ProjectFeatureService) GetByType(id string) (ProjectFeature, error) {
 	var out projectFeatureJSON
 

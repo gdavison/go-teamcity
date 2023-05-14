@@ -198,7 +198,7 @@ func (s *ProjectService) updateProject(locator Locator, project *Project, isCrea
 	//Update Parent
 	if !isCreate {
 		// Only perform update if there is a change.
-		// Or else TeamCity will "copy" the project to the same parent project, altering it's name
+		// Or else TeamCity will "copy" the project to the same parent project, altering its name
 		// For instance: "project" -> "project (1)"
 		if (project.ParentProjectID != "" || project.ParentProject != nil) && current.ParentProjectID != project.ParentProjectID {
 			var parent ProjectReference

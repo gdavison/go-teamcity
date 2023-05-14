@@ -192,7 +192,7 @@ func (p *Parameters) NonInherited() (po *Parameters) {
 	return po
 }
 
-// GetOk returns a Parameter by it's type/name combination
+// GetOk returns a Parameter by its type/name combination
 func (p *Parameters) GetOk(t string, n string) (out *Parameter, ok bool) {
 	for i := range p.Items {
 		if p.Items[i].Name == n && p.Items[i].Type == t {

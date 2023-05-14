@@ -87,7 +87,7 @@ func (s *AgentPoolsService) Create(pool CreateAgentPool) (*AgentPool, error) {
 	return &created, nil
 }
 
-// Delete will delete an Agent Pool based on it's ID
+// Delete will delete an Agent Pool based on its ID
 func (s *AgentPoolsService) Delete(id int) error {
 	locator := LocatorIDInt(id).String()
 	err := s.restHelper.delete(locator, "Agent Pool")
@@ -98,7 +98,7 @@ func (s *AgentPoolsService) Delete(id int) error {
 	return nil
 }
 
-// Get will return an Agent Pool based on it's ID
+// Get will return an Agent Pool based on its ID
 func (s *AgentPoolsService) GetByID(id int) (*AgentPool, error) {
 	var out AgentPool
 	locator := LocatorIDInt(id).String()
@@ -110,7 +110,7 @@ func (s *AgentPoolsService) GetByID(id int) (*AgentPool, error) {
 	return &out, nil
 }
 
-// Get will return an Agent Pool based on it's Name
+// Get will return an Agent Pool based on its Name
 func (s *AgentPoolsService) GetByName(name string) (*AgentPool, error) {
 	var out AgentPool
 	locator := LocatorName(name).String()
