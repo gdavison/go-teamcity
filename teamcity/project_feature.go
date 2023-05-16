@@ -153,7 +153,7 @@ func (s *ProjectFeatureService) Update(feature ProjectFeature) (ProjectFeature, 
 func (s *ProjectFeatureService) parseProjectFeatureJSONResponse(feature projectFeatureJSON) (ProjectFeature, error) {
 	switch feature.Type {
 	case "OAuthProvider":
-		return loadProjectFeatureSlackNotifier(s.ProjectID, feature)
+		return loadProjectFeatureSlackConnection(s.ProjectID, feature)
 	case "versionedSettings":
 		return loadProjectFeatureVersionedSettings(s.ProjectID, feature)
 	default:

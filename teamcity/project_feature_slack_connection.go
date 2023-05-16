@@ -1,7 +1,7 @@
 package teamcity
 
-// ProjectFeatureSlackNotifierOptions holds all properties for the versioned settings project feature.
-type ProjectFeatureSlackNotifierOptions struct {
+// ProjectFeatureSlackConnectionOptions holds all properties for the versioned settings project feature.
+type ProjectFeatureSlackConnectionOptions struct {
 	ClientId     string
 	ClientSecret string `json:"secure:clientSecret"`
 	DisplayName  string
@@ -9,50 +9,50 @@ type ProjectFeatureSlackNotifierOptions struct {
 	Token        string `json:"secure:token"`
 }
 
-// ProjectFeatureSlackNotifier represents the versioned settings feature for a project.
+// ProjectFeatureSlackConnection represents the versioned settings feature for a project.
 // Can be used to configure https://confluence.jetbrains.com/display/TCD10/Storing+Project+Settings+in+Version+Control.
-type ProjectFeatureSlackNotifier struct {
+type ProjectFeatureSlackConnection struct {
 	id        string
 	projectID string
 
-	Options ProjectFeatureSlackNotifierOptions
+	Options ProjectFeatureSlackConnectionOptions
 }
 
-// NewProjectFeatureSlackNotifier creates a new Versioned Settings project feature.
-func NewProjectFeatureSlackNotifier(projectID string, options ProjectFeatureSlackNotifierOptions) *ProjectFeatureSlackNotifier {
-	return &ProjectFeatureSlackNotifier{
+// NewProjectFeatureSlackConnection creates a new Versioned Settings project feature.
+func NewProjectFeatureSlackConnection(projectID string, options ProjectFeatureSlackConnectionOptions) *ProjectFeatureSlackConnection {
+	return &ProjectFeatureSlackConnection{
 		projectID: projectID,
 		Options:   options,
 	}
 }
 
 // ID returns the ID of this project feature.
-func (f *ProjectFeatureSlackNotifier) ID() string {
+func (f *ProjectFeatureSlackConnection) ID() string {
 	return f.id
 }
 
 // SetID sets the ID of this project feature.
-func (f *ProjectFeatureSlackNotifier) SetID(value string) {
+func (f *ProjectFeatureSlackConnection) SetID(value string) {
 	f.id = value
 }
 
 // Type represents the type of the project feature as a string.
-func (f *ProjectFeatureSlackNotifier) Type() string {
+func (f *ProjectFeatureSlackConnection) Type() string {
 	return "OAuthProvider"
 }
 
 // ProjectID represents the ID of the project the project feature is assigned to.
-func (f *ProjectFeatureSlackNotifier) ProjectID() string {
+func (f *ProjectFeatureSlackConnection) ProjectID() string {
 	return f.projectID
 }
 
 // SetProjectID sets the ID of the project the project feature is assigned to.
-func (f *ProjectFeatureSlackNotifier) SetProjectID(value string) {
+func (f *ProjectFeatureSlackConnection) SetProjectID(value string) {
 	f.projectID = value
 }
 
 // Properties returns all properties for the versioned settings project feature.
-func (f *ProjectFeatureSlackNotifier) Properties() *Properties {
+func (f *ProjectFeatureSlackConnection) Properties() *Properties {
 	props := NewProperties(
 		NewProperty("clientId", string(f.Options.ClientId)),
 		NewProperty("secure:clientSecret", f.Options.ClientSecret),
@@ -64,11 +64,11 @@ func (f *ProjectFeatureSlackNotifier) Properties() *Properties {
 	return props
 }
 
-func loadProjectFeatureSlackNotifier(projectID string, feature projectFeatureJSON) (ProjectFeature, error) {
-	settings := &ProjectFeatureSlackNotifier{
+func loadProjectFeatureSlackConnection(projectID string, feature projectFeatureJSON) (ProjectFeature, error) {
+	settings := &ProjectFeatureSlackConnection{
 		id:        feature.ID,
 		projectID: projectID,
-		Options:   ProjectFeatureSlackNotifierOptions{},
+		Options:   ProjectFeatureSlackConnectionOptions{},
 	}
 
 	if clientId, ok := feature.Properties.GetOk("clientId"); ok {

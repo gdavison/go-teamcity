@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestProjectFeatureSlackNotifier_CreateSlack(t *testing.T) {
+func TestProjectFeatureSlackConnection_CreateSlack(t *testing.T) {
 	client := safeSetup(t)
 
 	project := createTestProjectWithImplicitName(t, client)
@@ -16,7 +16,7 @@ func TestProjectFeatureSlackNotifier_CreateSlack(t *testing.T) {
 
 	service := client.ProjectFeatureService(project.ID)
 
-	feature := teamcity.NewProjectFeatureSlackNotifier(project.ID, teamcity.ProjectFeatureSlackNotifierOptions{
+	feature := teamcity.NewProjectFeatureSlackConnection(project.ID, teamcity.ProjectFeatureSlackConnectionOptions{
 		ClientId:     "abcd.1234",
 		ClientSecret: "xyz",
 		DisplayName:  "Notifier",
@@ -34,7 +34,7 @@ func TestProjectFeatureSlackNotifier_CreateSlack(t *testing.T) {
 	assert.Empty(t, createdFeature.Properties().Map()["secure:token"])
 }
 
-func TestProjectFeatureSlackNotifier_Delete(t *testing.T) {
+func TestProjectFeatureSlackConnection_Delete(t *testing.T) {
 	client := safeSetup(t)
 
 	project := createTestProjectWithImplicitName(t, client)
@@ -42,7 +42,7 @@ func TestProjectFeatureSlackNotifier_Delete(t *testing.T) {
 
 	service := client.ProjectFeatureService(project.ID)
 
-	feature := teamcity.NewProjectFeatureSlackNotifier(project.ID, teamcity.ProjectFeatureSlackNotifierOptions{
+	feature := teamcity.NewProjectFeatureSlackConnection(project.ID, teamcity.ProjectFeatureSlackConnectionOptions{
 		ClientId:     "abcd.1234",
 		ClientSecret: "xyz",
 		DisplayName:  "Notifier",
@@ -363,7 +363,7 @@ func TestProjectFeatureSlackNotifier_Delete(t *testing.T) {
 // 	assert.Contains(t, err.Error(), "404")
 // }
 
-func TestProjectFeatureSlackNotifier_GetByTypeWithMultiple(t *testing.T) {
+func TestProjectFeatureSlackConnection_GetByTypeWithMultiple(t *testing.T) {
 	client := safeSetup(t)
 
 	project := createTestProjectWithImplicitName(t, client)
@@ -371,14 +371,14 @@ func TestProjectFeatureSlackNotifier_GetByTypeWithMultiple(t *testing.T) {
 
 	service := client.ProjectFeatureService(project.ID)
 
-	feature1 := teamcity.NewProjectFeatureSlackNotifier(project.ID, teamcity.ProjectFeatureSlackNotifierOptions{
+	feature1 := teamcity.NewProjectFeatureSlackConnection(project.ID, teamcity.ProjectFeatureSlackConnectionOptions{
 		ClientId:     "abcd.1234",
 		ClientSecret: "xyz",
 		DisplayName:  "Notifier 1",
 		Token:        "ABCD1234EFG",
 	})
 
-	feature2 := teamcity.NewProjectFeatureSlackNotifier(project.ID, teamcity.ProjectFeatureSlackNotifierOptions{
+	feature2 := teamcity.NewProjectFeatureSlackConnection(project.ID, teamcity.ProjectFeatureSlackConnectionOptions{
 		ClientId:     "wxyz.1234",
 		ClientSecret: "abc",
 		DisplayName:  "Notifier 2",
