@@ -61,309 +61,7 @@ func TestProjectFeatureSlackConnection_Delete(t *testing.T) {
 	assert.Nil(t, deletedFeature)
 }
 
-// func TestProjectFeature_Update(t *testing.T) {
-// 	client := safeSetup(t)
-
-// 	project := createTestProjectWithImplicitName(t, client)
-// 	defer cleanUpProject(t, client, project.ID)
-
-// 	createdRoot := setupFakeRoot(t, client, project, "Test Root")
-// 	service := client.ProjectFeatureService(project.ID)
-
-// 	feature := teamcity.NewProjectFeatureVersionedSettings(project.ID, teamcity.ProjectFeatureVersionedSettingsOptions{
-// 		Format:        teamcity.VersionedSettingsFormatXML,
-// 		VcsRootID:     createdRoot.ID,
-// 		Enabled:       true,
-// 		BuildSettings: teamcity.VersionedSettingsBuildSettingsPreferCurrent,
-// 	})
-
-// 	createdFeature, err := service.Create(feature)
-// 	require.NoError(t, err)
-// 	assert.NotEmpty(t, createdFeature.ID)
-
-// 	type testData = struct {
-// 		description     string
-// 		enabled         bool
-// 		buildSettings   teamcity.VersionedSettingsBuildSettings
-// 		format          teamcity.VersionedSettingsFormat
-// 		credentialsType teamcity.CredentialsStorageType
-// 	}
-
-// 	var validate = func(t *testing.T, id string, data testData) {
-// 		retrievedFeature, err := service.GetByID(id)
-// 		require.NoError(t, err)
-// 		versionedSettings, ok := retrievedFeature.(*teamcity.ProjectFeatureVersionedSettings)
-// 		assert.True(t, ok)
-
-// 		assert.Equal(t, data.enabled, versionedSettings.Options.Enabled)
-// 		assert.Equal(t, data.buildSettings, versionedSettings.Options.BuildSettings)
-// 		assert.Equal(t, data.format, versionedSettings.Options.Format)
-// 		assert.Equal(t, data.credentialsType, versionedSettings.Options.CredentialsStorageType)
-// 	}
-// 	t.Log("Validating initial creation")
-// 	validate(t, createdFeature.ID(), testData{
-// 		enabled:         true,
-// 		credentialsType: teamcity.CredentialsStorageTypeScrambledInVcs,
-// 		format:          teamcity.VersionedSettingsFormatXML,
-// 		buildSettings:   teamcity.VersionedSettingsBuildSettingsPreferCurrent,
-// 	})
-
-// 	// then let's toggle some things
-// 	updateConfigurations := []testData{
-// 		{
-// 			description:     "Switch to Kotlin",
-// 			enabled:         true,
-// 			buildSettings:   teamcity.VersionedSettingsBuildSettingsPreferVcs,
-// 			format:          teamcity.VersionedSettingsFormatKotlin,
-// 			credentialsType: teamcity.CredentialsStorageTypeCredentialsJSON,
-// 		},
-// 		{
-// 			description:     "Switch back to XML",
-// 			enabled:         true,
-// 			buildSettings:   teamcity.VersionedSettingsBuildSettingsPreferVcs,
-// 			format:          teamcity.VersionedSettingsFormatXML,
-// 			credentialsType: teamcity.CredentialsStorageTypeScrambledInVcs,
-// 		},
-// 		{
-// 			description:     "Disabled",
-// 			enabled:         false,
-// 			buildSettings:   teamcity.VersionedSettingsBuildSettingsPreferVcs,
-// 			format:          teamcity.VersionedSettingsFormatXML,
-// 			credentialsType: teamcity.CredentialsStorageTypeScrambledInVcs,
-// 		},
-// 		{
-// 			description:     "Enabled & Prefer Current",
-// 			enabled:         true,
-// 			buildSettings:   teamcity.VersionedSettingsBuildSettingsPreferCurrent,
-// 			format:          teamcity.VersionedSettingsFormatXML,
-// 			credentialsType: teamcity.CredentialsStorageTypeScrambledInVcs,
-// 		},
-// 		{
-// 			description:     "Always Use Current",
-// 			enabled:         true,
-// 			buildSettings:   teamcity.VersionedSettingsBuildSettingsAlwaysUseCurrent,
-// 			format:          teamcity.VersionedSettingsFormatXML,
-// 			credentialsType: teamcity.CredentialsStorageTypeScrambledInVcs,
-// 		},
-// 		{
-// 			description:     "Kotlin with Scrambled",
-// 			enabled:         true,
-// 			buildSettings:   teamcity.VersionedSettingsBuildSettingsAlwaysUseCurrent,
-// 			format:          teamcity.VersionedSettingsFormatXML,
-// 			credentialsType: teamcity.CredentialsStorageTypeScrambledInVcs,
-// 		},
-// 		{
-// 			description:     "Kotlin with CredentialsJSON",
-// 			enabled:         true,
-// 			buildSettings:   teamcity.VersionedSettingsBuildSettingsAlwaysUseCurrent,
-// 			format:          teamcity.VersionedSettingsFormatXML,
-// 			credentialsType: teamcity.CredentialsStorageTypeCredentialsJSON,
-// 		},
-// 	}
-// 	for _, update := range updateConfigurations {
-// 		t.Logf("Testing %q", update.description)
-
-// 		existing, err := service.GetByID(createdFeature.ID())
-// 		require.NoError(t, err)
-
-// 		settings, ok := existing.(*teamcity.ProjectFeatureVersionedSettings)
-// 		assert.True(t, ok)
-
-// 		settings.Options.BuildSettings = update.buildSettings
-// 		settings.Options.Enabled = update.enabled
-// 		settings.Options.Format = update.format
-// 		settings.Options.CredentialsStorageType = update.credentialsType
-
-// 		updatedFeature, err := service.Update(settings)
-// 		require.NoError(t, err)
-// 		assert.NotEmpty(t, updatedFeature.ID)
-
-// 		// sanity check since we're updating with the same ID
-// 		assert.Equal(t, createdFeature.ID(), updatedFeature.ID())
-
-// 		validate(t, updatedFeature.ID(), update)
-// 	}
-// }
-
-// func TestProjectFeature_UpdateContextParameters(t *testing.T) {
-// 	client := safeSetup(t)
-
-// 	project := createTestProjectWithImplicitName(t, client)
-// 	defer cleanUpProject(t, client, project.ID)
-
-// 	createdRoot := setupFakeRoot(t, client, project, "Test Root")
-// 	service := client.ProjectFeatureService(project.ID)
-
-// 	feature := teamcity.NewProjectFeatureVersionedSettings(project.ID, teamcity.ProjectFeatureVersionedSettingsOptions{
-// 		Format:        teamcity.VersionedSettingsFormatXML,
-// 		VcsRootID:     createdRoot.ID,
-// 		Enabled:       true,
-// 		BuildSettings: teamcity.VersionedSettingsBuildSettingsPreferCurrent,
-// 		ContextParameters: map[string]string{
-// 			"Hello": "World",
-// 		},
-// 	})
-
-// 	createdFeature, err := service.Create(feature)
-// 	require.NoError(t, err)
-// 	assert.NotEmpty(t, createdFeature.ID)
-// 	assert.Equal(t, "World", createdFeature.Properties().Map()["context.Hello"])
-
-// 	retrieved, err := service.GetByID(createdFeature.ID())
-// 	require.NoError(t, err)
-// 	retrievedFeature := retrieved.(*teamcity.ProjectFeatureVersionedSettings)
-// 	assert.Equal(t, "World", retrievedFeature.Options.ContextParameters["Hello"])
-
-// 	feature.SetID(createdFeature.ID())
-// 	feature.Options.ContextParameters["Hello"] = "London"
-// 	_, err = service.Update(feature)
-
-// 	require.NoError(t, err)
-// 	retrieved, err = service.GetByID(createdFeature.ID())
-// 	require.NoError(t, err)
-// 	retrievedFeature = retrieved.(*teamcity.ProjectFeatureVersionedSettings)
-// 	assert.Equal(t, "London", retrievedFeature.Options.ContextParameters["Hello"])
-
-// 	feature.Options.ContextParameters["Hello"] = "World"
-// 	feature.Options.ContextParameters["Germany"] = "Deutschland"
-// 	_, err = service.Update(feature)
-
-// 	require.NoError(t, err)
-// 	retrieved, err = service.GetByID(createdFeature.ID())
-// 	require.NoError(t, err)
-// 	retrievedFeature = retrieved.(*teamcity.ProjectFeatureVersionedSettings)
-// 	assert.Equal(t, "World", retrievedFeature.Options.ContextParameters["Hello"])
-// 	assert.Equal(t, "Deutschland", retrievedFeature.Options.ContextParameters["Germany"])
-
-// 	feature.Options.ContextParameters = make(map[string]string)
-// 	_, err = service.Update(feature)
-// 	require.NoError(t, err)
-
-// 	retrieved, err = service.GetByID(createdFeature.ID())
-// 	require.NoError(t, err)
-// 	retrievedFeature = retrieved.(*teamcity.ProjectFeatureVersionedSettings)
-// 	assert.Equal(t, 0, len(retrievedFeature.Options.ContextParameters))
-// }
-
-// func TestProjectFeature_UpdateVCSRoot(t *testing.T) {
-// 	client := safeSetup(t)
-
-// 	project := createTestProjectWithImplicitName(t, client)
-// 	defer cleanUpProject(t, client, project.ID)
-
-// 	createdRoot := setupFakeRoot(t, client, project, "First Root")
-// 	service := client.ProjectFeatureService(project.ID)
-
-// 	feature := teamcity.NewProjectFeatureVersionedSettings(project.ID, teamcity.ProjectFeatureVersionedSettingsOptions{
-// 		Format:        teamcity.VersionedSettingsFormatXML,
-// 		VcsRootID:     createdRoot.ID,
-// 		Enabled:       true,
-// 		BuildSettings: teamcity.VersionedSettingsBuildSettingsPreferCurrent,
-// 	})
-
-// 	createdFeature, err := service.Create(feature)
-// 	require.NoError(t, err)
-// 	assert.NotEmpty(t, createdFeature.ID)
-
-// 	updatedRoot := setupFakeRoot(t, client, project, "Second Root")
-// 	existing, err := service.GetByID(createdFeature.ID())
-// 	require.NoError(t, err)
-
-// 	existingFeatures, ok := existing.(*teamcity.ProjectFeatureVersionedSettings)
-// 	assert.True(t, ok)
-// 	assert.Equal(t, createdRoot.ID, existingFeatures.Options.VcsRootID)
-// 	existingFeatures.Options.VcsRootID = updatedRoot.ID
-
-// 	_, err = service.Update(existingFeatures)
-// 	require.NoError(t, err)
-
-// 	existing, err = service.GetByID(createdFeature.ID())
-// 	require.NoError(t, err)
-
-// 	existingFeatures, ok = existing.(*teamcity.ProjectFeatureVersionedSettings)
-// 	assert.True(t, ok)
-// 	assert.Equal(t, updatedRoot.ID, existingFeatures.Options.VcsRootID)
-// }
-
-// func TestProjectFeature_GetEmptyFeatures(t *testing.T) {
-// 	client := safeSetup(t)
-
-// 	project := createTestProjectWithImplicitName(t, client)
-// 	defer cleanUpProject(t, client, project.ID)
-
-// 	service := client.ProjectFeatureService(project.ID)
-// 	features, err := service.Get()
-// 	require.NoError(t, err)
-// 	require.Empty(t, features)
-// }
-
-// func TestProjectFeature_GetWithOneCreatedFeature(t *testing.T) {
-// 	client := safeSetup(t)
-
-// 	project := createTestProjectWithImplicitName(t, client)
-// 	defer cleanUpProject(t, client, project.ID)
-
-// 	createdRoot := setupFakeRoot(t, client, project, "Test Root")
-// 	service := client.ProjectFeatureService(project.ID)
-
-// 	feature := teamcity.NewProjectFeatureVersionedSettings(project.ID, teamcity.ProjectFeatureVersionedSettingsOptions{
-// 		Format:        teamcity.VersionedSettingsFormatKotlin,
-// 		VcsRootID:     createdRoot.ID,
-// 		BuildSettings: teamcity.VersionedSettingsBuildSettingsPreferVcs,
-// 	})
-
-// 	createdFeature, err := service.Create(feature)
-// 	require.NoError(t, err)
-// 	assert.NotEmpty(t, createdFeature.ID)
-
-// 	features, err := service.Get()
-// 	require.NoError(t, err)
-// 	require.Len(t, features, 1)
-// }
-
-// func TestProjectFeature_GetByIdWithCreatedFeature(t *testing.T) {
-// 	client := safeSetup(t)
-
-// 	project := createTestProjectWithImplicitName(t, client)
-// 	defer cleanUpProject(t, client, project.ID)
-
-// 	createdRoot := setupFakeRoot(t, client, project, "Test Root")
-// 	service := client.ProjectFeatureService(project.ID)
-
-// 	feature := teamcity.NewProjectFeatureVersionedSettings(project.ID, teamcity.ProjectFeatureVersionedSettingsOptions{
-// 		Format:        teamcity.VersionedSettingsFormatKotlin,
-// 		VcsRootID:     createdRoot.ID,
-// 		BuildSettings: teamcity.VersionedSettingsBuildSettingsPreferVcs,
-// 	})
-
-// 	createdFeature, err := service.Create(feature)
-// 	require.NoError(t, err)
-// 	assert.NotEmpty(t, createdFeature.ID)
-
-// 	retrieved, err := service.GetByID(createdFeature.ID())
-// 	require.NoError(t, err)
-// 	assert.Equal(t, createdFeature.ID(), retrieved.ID())
-// 	assert.Equal(t, createdFeature.Type(), retrieved.Type())
-
-// 	// sanity check - should be none by default
-// 	retrievedFeature := retrieved.(*teamcity.ProjectFeatureVersionedSettings)
-// 	assert.Equal(t, 0, len(retrievedFeature.Options.ContextParameters))
-// }
-
-// func TestProjectFeature_GetByIdWithFeatureNotExisting(t *testing.T) {
-// 	client := safeSetup(t)
-
-// 	project := createTestProjectWithImplicitName(t, client)
-// 	defer cleanUpProject(t, client, project.ID)
-
-// 	service := client.ProjectFeatureService(project.ID)
-// 	retrievedFeature, err := service.GetByID("random_id")
-// 	require.Nil(t, retrievedFeature)
-// 	require.Error(t, err)
-// 	assert.Contains(t, err.Error(), "404")
-// }
-
-func TestProjectFeatureSlackConnection_GetByTypeWithMultiple(t *testing.T) {
+func TestProjectFeatureSlackConnection_Update(t *testing.T) {
 	client := safeSetup(t)
 
 	project := createTestProjectWithImplicitName(t, client)
@@ -371,34 +69,58 @@ func TestProjectFeatureSlackConnection_GetByTypeWithMultiple(t *testing.T) {
 
 	service := client.ProjectFeatureService(project.ID)
 
-	feature1 := teamcity.NewProjectFeatureSlackConnection(project.ID, teamcity.ProjectFeatureSlackConnectionOptions{
+	feature := teamcity.NewProjectFeatureSlackConnection(project.ID, teamcity.ProjectFeatureSlackConnectionOptions{
 		ClientId:     "abcd.1234",
 		ClientSecret: "xyz",
-		DisplayName:  "Notifier 1",
+		DisplayName:  "Notifier",
 		Token:        "ABCD1234EFG",
 	})
 
-	feature2 := teamcity.NewProjectFeatureSlackConnection(project.ID, teamcity.ProjectFeatureSlackConnectionOptions{
-		ClientId:     "wxyz.1234",
+	createdFeature, err := service.Create(feature)
+	require.NoError(t, err)
+	assert.NotEmpty(t, createdFeature.ID)
+
+	var validate = func(t *testing.T, id string, expected teamcity.ProjectFeatureSlackConnectionOptions) {
+		retrievedFeature, err := service.GetByID(id)
+		require.NoError(t, err)
+		slackConnection, ok := retrievedFeature.(*teamcity.ProjectFeatureSlackConnection)
+		assert.True(t, ok)
+
+		assert.Equal(t, expected.ClientId, slackConnection.Options.ClientId)
+		assert.Equal(t, expected.DisplayName, slackConnection.Options.DisplayName)
+		assert.Equal(t, "slackConnection", slackConnection.Options.ProviderType)
+	}
+	t.Log("Validating initial creation")
+	validate(t, createdFeature.ID(), teamcity.ProjectFeatureSlackConnectionOptions{
+		ClientId:    "abcd.1234",
+		DisplayName: "Notifier",
+	})
+
+	// then let's toggle some things
+	update := teamcity.ProjectFeatureSlackConnectionOptions{
+		ClientId:     "1234.abcd",
 		ClientSecret: "abc",
-		DisplayName:  "Notifier 2",
-		Token:        "ABCD1234EFG",
-	})
-
-	createdFeature1, err := service.Create(feature1)
+		DisplayName:  "Updated",
+		Token:        "XYZ789ABCD",
+	}
+	t.Log("Validating update")
+	existing, err := service.GetByID(createdFeature.ID())
 	require.NoError(t, err)
-	assert.NotEmpty(t, createdFeature1.ID)
 
-	createdFeature2, err := service.Create(feature2)
+	settings, ok := existing.(*teamcity.ProjectFeatureSlackConnection)
+	assert.True(t, ok)
+
+	settings.Options.ClientId = update.ClientId
+	settings.Options.ClientSecret = update.ClientSecret
+	settings.Options.DisplayName = update.DisplayName
+	settings.Options.Token = update.Token
+
+	updatedFeature, err := service.Update(settings)
 	require.NoError(t, err)
-	assert.NotEmpty(t, createdFeature2.ID)
+	assert.NotEmpty(t, updatedFeature.ID)
 
-	retrieved, err := service.GetByType("OAuthProvider")
-	require.NoError(t, err)
-	// we can't compare the ID, since they change after creation
-	assert.Equal(t, createdFeature1.Type(), retrieved.Type())
+	// sanity check since we're updating with the same ID
+	assert.Equal(t, createdFeature.ID(), updatedFeature.ID())
 
-	// sanity check - should be none by default
-	retrievedFeature := retrieved.(*teamcity.ProjectFeatureVersionedSettings)
-	assert.Equal(t, 0, len(retrievedFeature.Options.ContextParameters))
+	validate(t, updatedFeature.ID(), update)
 }
